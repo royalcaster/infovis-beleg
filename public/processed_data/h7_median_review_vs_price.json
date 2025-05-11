@@ -1,0 +1,52 @@
+[
+    {
+        "price_bin": "Free",
+        "median_positive_percentage": 75.0,
+        "num_games": 14160
+    },
+    {
+        "price_bin": "$0.01-$4.99",
+        "median_positive_percentage": -1.0,
+        "num_games": 39388
+    },
+    {
+        "price_bin": "$5-$9.99",
+        "median_positive_percentage": 58.0,
+        "num_games": 19090
+    },
+    {
+        "price_bin": "$10-$14.99",
+        "median_positive_percentage": 72.0,
+        "num_games": 7669
+    },
+    {
+        "price_bin": "$15-$19.99",
+        "median_positive_percentage": 76.0,
+        "num_games": 5062
+    },
+    {
+        "price_bin": "$20-$29.99",
+        "median_positive_percentage": 76.0,
+        "num_games": 2558
+    },
+    {
+        "price_bin": "$30-$39.99",
+        "median_positive_percentage": 78.0,
+        "num_games": 798
+    },
+    {
+        "price_bin": "$40-$49.99",
+        "median_positive_percentage": 76.0,
+        "num_games": 313
+    },
+    {
+        "price_bin": "$50-$59.99",
+        "median_positive_percentage": 76.0,
+        "num_games": 272
+    },
+    {
+        "price_bin": "$60+",
+        "median_positive_percentage": -1.0,
+        "num_games": 308
+    }
+]

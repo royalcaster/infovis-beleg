@@ -1,0 +1,132 @@
+{
+    "total_games_analyzed": 89618,
+    "numeric_column_stats": [
+        {
+            "column_name": "Price",
+            "min": 0.0,
+            "max": 999.98,
+            "average": 7.309622620449302,
+            "median": 4.99,
+            "std_dev": 13.331073254511667,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "DLC Count",
+            "min": 0,
+            "max": 3427,
+            "average": 0.5955834765337321,
+            "median": 0.0,
+            "std_dev": 15.351919794528746,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Achievements",
+            "min": 0,
+            "max": 9821,
+            "average": 20.55233323662657,
+            "median": 5.0,
+            "std_dev": 163.562417700209,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Recommendations",
+            "min": 0,
+            "max": 4401572,
+            "average": 1009.4010801401504,
+            "median": 0.0,
+            "std_dev": 22048.147657964633,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Metacritic Score",
+            "min": 0,
+            "max": 97,
+            "average": 2.9032448838403,
+            "median": 0.0,
+            "std_dev": 14.445357584373163,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "User Score",
+            "min": 0,
+            "max": 100,
+            "average": 0.0328170679997322,
+            "median": 0.0,
+            "std_dev": 1.615149183822939,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Positive Reviews",
+            "min": 0,
+            "max": 7480813,
+            "average": 1269.8959807181593,
+            "median": 10.0,
+            "std_dev": 31814.411404071354,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Negative Reviews",
+            "min": 0,
+            "max": 1135108,
+            "average": 209.80255082684283,
+            "median": 2.0,
+            "std_dev": 6114.3136892460825,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Est. Owners (Lower Bound)",
+            "min": 0,
+            "max": 200000000,
+            "average": 59079.202838715435,
+            "median": 0.0,
+            "std_dev": 1022290.618231816,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Avg. Playtime (All Time, Mins)",
+            "min": 0,
+            "max": 1462997,
+            "average": 114.91188154165458,
+            "median": 0.0,
+            "std_dev": 6814.747947977597,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Median Playtime (All Time, Mins)",
+            "min": 0,
+            "max": 1462997,
+            "average": 114.75585261889353,
+            "median": 0.0,
+            "std_dev": 8806.711195543063,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Peak Concurrent Users",
+            "min": 0,
+            "max": 1212356,
+            "average": 98.33994286862014,
+            "median": 0.0,
+            "std_dev": 5717.544397767541,
+            "count_non_null": 89618
+        },
+        {
+            "column_name": "Total Reviews",
+            "min": -1,
+            "max": 8632939,
+            "average": 1315.4901359101966,
+            "median": 15.0,
+            "std_dev": 35423.69677558889,
+            "count_non_null": 89618
+        }
+    ],
+    "free_vs_paid_counts": [
+        {
+            "type": "Paid",
+            "count": 75458
+        },
+        {
+            "type": "Free",
+            "count": 14160
+        }
+    ]
+}

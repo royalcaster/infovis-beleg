@@ -1,0 +1,32 @@
+[
+    {
+        "positive_reviews_bin": "0-1k",
+        "avg_estimated_owners": 10067.384963390678,
+        "num_games": 83995
+    },
+    {
+        "positive_reviews_bin": "1k-10k",
+        "avg_estimated_owners": 236939.34464327214,
+        "num_games": 4303
+    },
+    {
+        "positive_reviews_bin": "10k-50k",
+        "avg_estimated_owners": 1011807.7324973877,
+        "num_games": 957
+    },
+    {
+        "positive_reviews_bin": "50k-100k",
+        "avg_estimated_owners": 2569060.773480663,
+        "num_games": 181
+    },
+    {
+        "positive_reviews_bin": "100k-500k",
+        "avg_estimated_owners": 6771895.424836601,
+        "num_games": 153
+    },
+    {
+        "positive_reviews_bin": "500k+",
+        "avg_estimated_owners": 33103448.275862068,
+        "num_games": 29
+    }
+]

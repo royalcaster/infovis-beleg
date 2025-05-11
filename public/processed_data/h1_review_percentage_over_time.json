@@ -1,0 +1,87 @@
+[
+    {
+        "release_year": 2009,
+        "avg_positive_percentage": 77.0952380952381,
+        "num_games": 63
+    },
+    {
+        "release_year": 2010,
+        "avg_positive_percentage": 71.28658536585365,
+        "num_games": 164
+    },
+    {
+        "release_year": 2011,
+        "avg_positive_percentage": 72.64622641509433,
+        "num_games": 212
+    },
+    {
+        "release_year": 2012,
+        "avg_positive_percentage": 74.92880258899676,
+        "num_games": 309
+    },
+    {
+        "release_year": 2013,
+        "avg_positive_percentage": 73.76521739130435,
+        "num_games": 460
+    },
+    {
+        "release_year": 2014,
+        "avg_positive_percentage": 67.51606557377049,
+        "num_games": 1525
+    },
+    {
+        "release_year": 2015,
+        "avg_positive_percentage": 62.593018643395474,
+        "num_games": 2521
+    },
+    {
+        "release_year": 2016,
+        "avg_positive_percentage": 58.78894230769231,
+        "num_games": 4160
+    },
+    {
+        "release_year": 2017,
+        "avg_positive_percentage": 49.377911848500084,
+        "num_games": 5967
+    },
+    {
+        "release_year": 2018,
+        "avg_positive_percentage": 45.28415961305925,
+        "num_games": 7443
+    },
+    {
+        "release_year": 2019,
+        "avg_positive_percentage": 45.010413276928084,
+        "num_games": 6146
+    },
+    {
+        "release_year": 2020,
+        "avg_positive_percentage": 46.49626517273576,
+        "num_games": 8568
+    },
+    {
+        "release_year": 2021,
+        "avg_positive_percentage": 47.0925970581143,
+        "num_games": 8294
+    },
+    {
+        "release_year": 2022,
+        "avg_positive_percentage": 45.418213583751914,
+        "num_games": 9158
+    },
+    {
+        "release_year": 2023,
+        "avg_positive_percentage": 41.32100510404398,
+        "num_games": 12735
+    },
+    {
+        "release_year": 2024,
+        "avg_positive_percentage": 39.014987419319546,
+        "num_games": 18282
+    },
+    {
+        "release_year": 2025,
+        "avg_positive_percentage": 31.94206549118388,
+        "num_games": 3573
+    }
+]

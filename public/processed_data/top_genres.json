@@ -1,0 +1,42 @@
+[
+    {
+        "genre": "Indie",
+        "game_count": 63189
+    },
+    {
+        "genre": "Casual",
+        "game_count": 38699
+    },
+    {
+        "genre": "Action",
+        "game_count": 36842
+    },
+    {
+        "genre": "Adventure",
+        "game_count": 35452
+    },
+    {
+        "genre": "Simulation",
+        "game_count": 18570
+    },
+    {
+        "genre": "Strategy",
+        "game_count": 17366
+    },
+    {
+        "genre": "RPG",
+        "game_count": 16342
+    },
+    {
+        "genre": "Early Access",
+        "game_count": 9113
+    },
+    {
+        "genre": "Free To Play",
+        "game_count": 8867
+    },
+    {
+        "genre": "Sports",
+        "game_count": 3939
+    }
+]

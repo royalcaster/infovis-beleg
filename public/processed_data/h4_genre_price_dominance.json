@@ -1,0 +1,107 @@
+[
+    {
+        "price_bin": "Free",
+        "genre": "Indie",
+        "game_count": 9067
+    },
+    {
+        "price_bin": "Free",
+        "genre": "Free To Play",
+        "game_count": 8795
+    },
+    {
+        "price_bin": "Free",
+        "genre": "Casual",
+        "game_count": 5693
+    },
+    {
+        "price_bin": "$0.01-$9.99",
+        "genre": "Indie",
+        "game_count": 43921
+    },
+    {
+        "price_bin": "$0.01-$9.99",
+        "genre": "Casual",
+        "game_count": 28378
+    },
+    {
+        "price_bin": "$0.01-$9.99",
+        "genre": "Action",
+        "game_count": 24004
+    },
+    {
+        "price_bin": "$10-$19.99",
+        "genre": "Indie",
+        "game_count": 8565
+    },
+    {
+        "price_bin": "$10-$19.99",
+        "genre": "Adventure",
+        "game_count": 6016
+    },
+    {
+        "price_bin": "$10-$19.99",
+        "genre": "Action",
+        "game_count": 5456
+    },
+    {
+        "price_bin": "$20-$29.99",
+        "genre": "Indie",
+        "game_count": 1281
+    },
+    {
+        "price_bin": "$20-$29.99",
+        "genre": "Adventure",
+        "game_count": 1084
+    },
+    {
+        "price_bin": "$20-$29.99",
+        "genre": "Action",
+        "game_count": 1032
+    },
+    {
+        "price_bin": "$30-$39.99",
+        "genre": "Adventure",
+        "game_count": 316
+    },
+    {
+        "price_bin": "$30-$39.99",
+        "genre": "Action",
+        "game_count": 313
+    },
+    {
+        "price_bin": "$30-$39.99",
+        "genre": "RPG",
+        "game_count": 193
+    },
+    {
+        "price_bin": "$40-$49.99",
+        "genre": "Action",
+        "game_count": 118
+    },
+    {
+        "price_bin": "$40-$49.99",
+        "genre": "Adventure",
+        "game_count": 98
+    },
+    {
+        "price_bin": "$40-$49.99",
+        "genre": "RPG",
+        "game_count": 89
+    },
+    {
+        "price_bin": "$50+",
+        "genre": "Action",
+        "game_count": 276
+    },
+    {
+        "price_bin": "$50+",
+        "genre": "Adventure",
+        "game_count": 210
+    },
+    {
+        "price_bin": "$50+",
+        "genre": "Simulation",
+        "game_count": 175
+    }
+]

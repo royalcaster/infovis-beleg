@@ -1,0 +1,22 @@
+[
+    {
+        "score_bin": "90-100 (Outstanding)",
+        "game_count": 79
+    },
+    {
+        "score_bin": "75-89 (Good)",
+        "game_count": 1776
+    },
+    {
+        "score_bin": "50-74 (Average)",
+        "game_count": 1590
+    },
+    {
+        "score_bin": "1-49 (Poor)",
+        "game_count": 102
+    },
+    {
+        "score_bin": "Not Scored",
+        "game_count": 86071
+    }
+]

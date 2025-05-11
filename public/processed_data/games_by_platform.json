@@ -1,0 +1,14 @@
+[
+    {
+        "platform": "windows",
+        "count": 89588
+    },
+    {
+        "platform": "mac",
+        "count": 17438
+    },
+    {
+        "platform": "linux",
+        "count": 12627
+    }
+]

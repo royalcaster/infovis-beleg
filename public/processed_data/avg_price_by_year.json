@@ -1,0 +1,52 @@
+[
+    {
+        "release_year": "2025",
+        "average_price": 7.703501259446358,
+        "game_count": 3573
+    },
+    {
+        "release_year": "2024",
+        "average_price": 7.460577617330159,
+        "game_count": 18282
+    },
+    {
+        "release_year": "2023",
+        "average_price": 7.427601099333656,
+        "game_count": 12735
+    },
+    {
+        "release_year": "2022",
+        "average_price": 7.679181043895846,
+        "game_count": 9158
+    },
+    {
+        "release_year": "2021",
+        "average_price": 7.583537496985142,
+        "game_count": 8294
+    },
+    {
+        "release_year": "2020",
+        "average_price": 6.629382586367377,
+        "game_count": 8568
+    },
+    {
+        "release_year": "2019",
+        "average_price": 7.209093719492309,
+        "game_count": 6146
+    },
+    {
+        "release_year": "2018",
+        "average_price": 6.329825339244778,
+        "game_count": 7443
+    },
+    {
+        "release_year": "2017",
+        "average_price": 6.776535947712654,
+        "game_count": 5967
+    },
+    {
+        "release_year": "2016",
+        "average_price": 7.174444711539107,
+        "game_count": 4160
+    }
+]
