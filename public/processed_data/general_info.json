@@ -74,12 +74,12 @@
             "count_non_null": 89618
         },
         {
-            "column_name": "Est. Owners (Lower Bound)",
-            "min": 0,
-            "max": 200000000,
-            "average": 59079.202838715435,
-            "median": 0.0,
-            "std_dev": 1022290.618231816,
+            "column_name": "Est. Owners (Midpoint)",
+            "min": 0.0,
+            "max": 350000000.0,
+            "average": 101133.75661139503,
+            "median": 10000.0,
+            "std_dev": 1677279.3890860025,
             "count_non_null": 89618
         },
         {
