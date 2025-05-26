@@ -1,17 +1,17 @@
 [
     {
         "num_platforms": 1,
-        "avg_estimated_owners": 46238.399071925756,
+        "avg_estimated_owners": 80305.32192575406,
         "num_games": 68960
     },
     {
         "num_platforms": 2,
-        "avg_estimated_owners": 78913.21691339421,
+        "avg_estimated_owners": 132600.3900363443,
         "num_games": 11281
     },
     {
         "num_platforms": 3,
-        "avg_estimated_owners": 129651.27439479578,
+        "avg_estimated_owners": 216453.55657459743,
         "num_games": 9377
     }
 ]

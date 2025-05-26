@@ -1,16 +1,16 @@
 [
     {
-        "game_type": "Free-to-Play",
-        "avg_estimated_owners": 113843.22033898305,
-        "avg_positive_percentage": 61.48418079096045,
-        "stddev_positive_percentage": 33.972636251516974,
-        "num_games": 14160
-    },
-    {
         "game_type": "Paid",
-        "avg_estimated_owners": 48802.512656047074,
+        "avg_estimated_owners": 85550.4386546158,
         "avg_positive_percentage": 42.32522727875109,
         "stddev_positive_percentage": 41.12655214710341,
         "num_games": 75458
+    },
+    {
+        "game_type": "Free-to-Play",
+        "avg_estimated_owners": 184176.5536723164,
+        "avg_positive_percentage": 61.48418079096045,
+        "stddev_positive_percentage": 33.972636251516974,
+        "num_games": 14160
     }
 ]
