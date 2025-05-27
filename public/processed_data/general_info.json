@@ -121,12 +121,12 @@
     ],
     "free_vs_paid_counts": [
         {
-            "type": "Paid",
-            "count": 75458
-        },
-        {
             "type": "Free",
             "count": 14160
+        },
+        {
+            "type": "Paid",
+            "count": 75458
         }
     ]
 }

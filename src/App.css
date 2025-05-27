@@ -30,7 +30,7 @@ body {
 .data-source-button {
   display: inline-flex; /* Aligns logo and text */
   align-items: center;
-  background-color: #007bff; /* Blue background */
+  background-color: #5772EF; /* Blue background */
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
@@ -41,13 +41,19 @@ body {
 }
 
 .data-source-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #344bb0; /* Darker blue on hover */
 }
 
 .data-source-button .kaggle-logo { /* If you use an <img> tag */
   width: 24px;
   height: 24px;
   margin-right: 8px;
+}
+
+.gradient-div {
+  height: 100px;
+  width: 100%;
+  background: linear-gradient(to bottom, rgb(0, 9, 16), transparent);
 }
 
 .App-container {
