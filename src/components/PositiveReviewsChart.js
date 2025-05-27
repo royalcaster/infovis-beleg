@@ -10,18 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { colors, hexToRgba } from "../colors";
-
-const formatPercentage = (num) => {
-  if (num === null || num === undefined || num === "N/A") return "N/A";
-  const numericValue = parseFloat(num);
-
-  if (isNaN(numericValue)) {
-    return typeof num === 'string' && num.includes('%') ? num : String(num);
-  }
-
-  const integerPercentage = Math.round(numericValue);
-  return integerPercentage + "%";
-};
+import { formatPercentage } from "../utils";
 
 const formatYAxisTick = (tickValue) => {
   if (tickValue === 0) {

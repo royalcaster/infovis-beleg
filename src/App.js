@@ -3,52 +3,14 @@ import "./App.css";
 import { colors } from "./colors";
 import Header from "./components/Header";
 import PositiveReviewsChart from "./components/PositiveReviewsChart";
-
-const formatNumber = (num, precision = 1) => {
-  if (num === null || num === undefined || num === "N/A") return "N/A";
-  if (typeof num === "string" && isNaN(parseFloat(num))) return num;
-
-  const numericValue = parseFloat(num);
-  if (isNaN(numericValue)) return "N/A";
-
-  if (precision === 0 && Number.isInteger(numericValue))
-    return numericValue.toString();
-
-  if (Math.abs(numericValue) >= 1000000000)
-    return (numericValue / 1000000000).toFixed(precision) + "B";
-  if (Math.abs(numericValue) >= 1000000)
-    return (numericValue / 1000000).toFixed(precision) + "M";
-  if (Math.abs(numericValue) >= 1000)
-    return (numericValue / 1000).toFixed(precision) + "K";
-
-  return typeof numericValue === "number"
-    ? numericValue.toFixed(Math.min(precision, 2))
-    : numericValue;
-};
-
-const formatPercentage = (num) => {
-  if (num === null || num === undefined || num === "N/A") return "N/A";
-  const numericValue = parseFloat(num);
-
-  if (isNaN(numericValue)) {
-    return typeof num === 'string' && num.includes('%') ? num : String(num);
-  }
-
-  const integerPercentage = Math.round(numericValue);
-  return integerPercentage + "%";
-};
-
-const formatYAxisTick = (tickValue) => {
-  if (tickValue === 0) {
-    return '';
-  }
-  return formatPercentage(tickValue);
-};
+import PlatformOwnersChart from "./components/PlatformOwnersChart";
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [h1Data, setH1Data] = useState(null);
+  const [platformData, setPlatformData] = useState(null);
+  const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,12 +28,18 @@ function App() {
         };
 
         const h1 = await fetchJson("h1_review_percentage_over_time");
+        const h2 = await fetchJson("h2_platforms_vs_owners");
+        
         setH1Data(h1);
+        setPlatformData(h2);
       } catch (err) {
         console.error("Failed to fetch processed data:", err);
         setError(err.message);
       } finally {
-        setLoading(false);
+        setFadeOut(true);
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
       }
     };
 
@@ -88,14 +56,6 @@ function App() {
       .catch(err => console.error('Test.txt error:', err));
   }, []);
 
-  if (loading) {
-    return (
-      <div className="App-container">
-        <h1>Loading Data...</h1>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="App-container error-message">
@@ -106,11 +66,20 @@ function App() {
 
   return (
     <div className="App">
+      {loading && (
+        <div className={`loading-overlay ${fadeOut ? 'fade-out' : ''}`}>
+          <div className="spinner"></div>
+          <h1>Loading Data...</h1>
+        </div>
+      )}
+      
       <Header />
       <div className="gradient-div"></div>
       <main className="App-container" style={{ backgroundColor: colors.background1 }}>
         <div className="content-container">
           <PositiveReviewsChart data={h1Data} />
+          <div style={{height: 100}}></div>
+          <PlatformOwnersChart data={platformData} />
         </div>
       </main>
     </div>
