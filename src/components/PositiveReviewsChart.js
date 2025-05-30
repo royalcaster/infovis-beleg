@@ -59,7 +59,7 @@ const PositiveReviewsChart = ({ data }) => {
               borderRadius: '5px',
               color: colors.font2,
               backdropFilter: "blur(5px)",
-              WebkitBackdropFilter: "blur(5px)",
+              WebkitBackdropFilter: "blur(5px)"
             }}
             labelStyle={{ color: colors.font2, fontWeight: 'bold', margin: "5px" }}
             itemStyle={{ color: colors.font2 }}
