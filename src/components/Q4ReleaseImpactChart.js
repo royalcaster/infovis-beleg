@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   BarChart,
   Bar,
@@ -9,98 +9,93 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { colors, hexToRgba } from "../colors";
-
-const formatNumber = (num) => {
-  if (num === null || num === undefined || num === "N/A") return "N/A";
-  const numericValue = parseFloat(num);
-  if (isNaN(numericValue)) return "N/A";
-
-  if (Math.abs(numericValue) >= 1000000)
-    return (numericValue / 1000000).toFixed(1) + "M";
-  if (Math.abs(numericValue) >= 1000)
-    return (numericValue / 1000).toFixed(1) + "K";
-
-  return numericValue.toLocaleString();
-};
 
 const Q4ReleaseImpactChart = ({ data }) => {
-  if (!data || data.length === 0) {
-    return (
-      <section className="chart-section">
-        <h2>H6: Q4 Release Impact Analysis</h2>
-        <p>No data available for this analysis.</p>
-      </section>
-    );
+  // Step C1: Validate data shape
+  const isValid =
+    Array.isArray(data) &&
+    data.length > 0 &&
+    data[0].release_period !== undefined &&
+    data[0].avg_estimated_owners !== undefined;
+
+  // Step C2: Debug logging (only in development)
+  if (process.env.NODE_ENV === "development") {
+    console.log("[Q4ReleaseImpactChart] data sample:", data?.slice(0, 5));
+  }
+
+  // Always call hooks in the same order
+  const safeData = isValid ? data : [];
+
+  // Memoize the processed data to prevent unnecessary recalculations
+  const processedData = useMemo(() => {
+    if (!safeData.length) return [];
+    return safeData.map((item) => ({
+      period: item.release_period,
+      avg_owners: item.avg_estimated_owners,
+      avg_reviews: item.avg_num_reviews,
+      num_games: item.num_games,
+    }));
+  }, [safeData]);
+
+  // Step C3: Handle empty or malformed data
+  if (!isValid) {
+    return <div>No valid data available for Q4 Release Impact.</div>;
+  }
+
+  if (!data?.length) {
+    return <div>No data available</div>;
   }
 
   return (
-    <section className="chart-section">
-      <h1 className="chart-title">Impact of Q4 Releases on Game Performance</h1>
-      <ResponsiveContainer width="100%" height={500}>
+    <div style={{ width: "100%", height: 400 }}>
+      <ResponsiveContainer>
         <BarChart
-          data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+          data={processedData}
+          margin={{
+            top: 20,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
         >
-          <CartesianGrid strokeDasharray="6 6" stroke={colors.background3} />
-          <XAxis
-            dataKey="release_period"
-            stroke={colors.font2}
-            tick={{ fill: colors.font2, fontSize: 14 }}
-          />
-          <YAxis
-            yAxisId="left"
-            orientation="left"
-            stroke={colors.font2}
-            tick={{ fill: colors.font2, fontSize: 14 }}
-            tickFormatter={formatNumber}
-          />
-          <YAxis
-            yAxisId="right"
-            orientation="right"
-            stroke={colors.font2}
-            tick={{ fill: colors.font2, fontSize: 14 }}
-            tickFormatter={formatNumber}
-          />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="period" />
+          <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
+          <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
           <Tooltip
-            formatter={(value, name) => [formatNumber(value), name]}
-            contentStyle={{
-              backgroundColor: hexToRgba(colors.background1, 0.5),
-              borderColor: "rgba(60, 60, 60, 0)",
-              borderRadius: "5px",
-              color: colors.font2,
-              backdropFilter: "blur(5px)",
-              WebkitBackdropFilter: "blur(5px)",
-            }}
-            labelStyle={{
-              color: colors.font2,
-              fontWeight: "bold",
-              margin: "5px",
-            }}
-            itemStyle={{ color: colors.font2 }}
-          />
-          <Legend
-            wrapperStyle={{
-              paddingTop: "20px",
-              color: colors.font2,
+            formatter={(value, name) => {
+              if (name === "avg_reviews") {
+                return [value.toFixed(1), "Average Reviews"];
+              }
+              if (name === "avg_owners") {
+                return [value.toLocaleString(), "Average Owners"];
+              }
+              return [value.toLocaleString(), "Number of Games"];
             }}
           />
+          <Legend />
           <Bar
             yAxisId="left"
-            dataKey="avg_estimated_owners"
-            fill={colors.blue}
-            name="Average Estimated Owners"
+            dataKey="avg_owners"
+            name="Average Owners"
+            fill="#8884d8"
           />
           <Bar
             yAxisId="right"
-            dataKey="avg_num_reviews"
-            fill={colors.magenta}
-            name="Average Number of Reviews"
+            dataKey="avg_reviews"
+            name="Average Reviews"
+            fill="#82ca9d"
+          />
+          <Bar
+            yAxisId="right"
+            dataKey="num_games"
+            name="Number of Games"
+            fill="#ffc658"
           />
         </BarChart>
       </ResponsiveContainer>
-    </section>
+    </div>
   );
 };
 
-export default Q4ReleaseImpactChart;
+export default React.memo(Q4ReleaseImpactChart);

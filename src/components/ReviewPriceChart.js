@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -26,13 +26,40 @@ const formatNumber = (num) => {
 };
 
 const ReviewPriceChart = ({ data }) => {
-  if (!data || data.length === 0) {
-    return (
-      <section className="chart-section">
-        <h2>H7: Price vs Review Analysis</h2>
-        <p>No data available for this analysis.</p>
-      </section>
-    );
+  // Step C1: Validate data shape
+  const isValid =
+    Array.isArray(data) &&
+    data.length > 0 &&
+    data[0].price_bin !== undefined &&
+    data[0].median_positive_percentage !== undefined;
+
+  // Step C2: Debug logging (only in development)
+  if (process.env.NODE_ENV === "development") {
+    console.log("[ReviewPriceChart] data sample:", data?.slice(0, 5));
+  }
+
+  // Always call hooks in the same order
+  const safeData = isValid ? data : [];
+
+  // Memoize the processed data to prevent unnecessary recalculations
+  const processedData = useMemo(() => {
+    if (!safeData.length) return [];
+    return safeData
+      .filter((item) => item.median_positive_percentage >= 0) // Filter out invalid percentages
+      .map((item) => ({
+        price: item.price_bin,
+        median_positive: item.median_positive_percentage,
+        num_games: item.num_games,
+      }));
+  }, [safeData]);
+
+  // Step C3: Handle empty or malformed data
+  if (!isValid) {
+    return <div>No valid data available for Median Review vs Price.</div>;
+  }
+
+  if (!data?.length) {
+    return <div>No data available</div>;
   }
 
   return (
@@ -40,88 +67,57 @@ const ReviewPriceChart = ({ data }) => {
       <h1 className="chart-title">Price Impact on Game Reviews</h1>
       <ResponsiveContainer width="100%" height={500}>
         <LineChart
-          data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+          data={processedData}
+          margin={{
+            top: 20,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
         >
-          <CartesianGrid strokeDasharray="6 6" stroke={colors.background3} />
+          <CartesianGrid strokeDasharray="3 3" />
           <XAxis
-            dataKey="price_bin"
-            stroke={colors.font2}
-            tick={{ fill: colors.font2, fontSize: 14 }}
+            dataKey="price"
+            label={{ value: "Price Range", position: "bottom" }}
           />
           <YAxis
             yAxisId="left"
             orientation="left"
-            stroke={colors.font2}
-            tick={{ fill: colors.font2, fontSize: 14 }}
-            tickFormatter={formatPercentage}
+            label={{
+              value: "Median Positive Reviews (%)",
+              angle: -90,
+              position: "left",
+            }}
           />
           <YAxis
             yAxisId="right"
             orientation="right"
-            stroke={colors.font2}
-            tick={{ fill: colors.font2, fontSize: 14 }}
-            tickFormatter={formatNumber}
+            label={{ value: "Number of Games", angle: 90, position: "right" }}
           />
           <Tooltip
-            formatter={(value, name) => [
-              name === "median_positive_percentage"
-                ? formatPercentage(value)
-                : formatNumber(value),
-              name === "median_positive_percentage"
-                ? "Median Positive %"
-                : "Number of Games",
-            ]}
-            contentStyle={{
-              backgroundColor: hexToRgba(colors.background1, 0.5),
-              borderColor: "rgba(60, 60, 60, 0)",
-              borderRadius: "5px",
-              color: colors.font2,
-              backdropFilter: "blur(5px)",
-              WebkitBackdropFilter: "blur(5px)",
-            }}
-            labelStyle={{
-              color: colors.font2,
-              fontWeight: "bold",
-              margin: "5px",
-            }}
-            itemStyle={{ color: colors.font2 }}
-          />
-          <Legend
-            wrapperStyle={{
-              paddingTop: "20px",
-              color: colors.font2,
+            formatter={(value, name) => {
+              if (name === "median_positive") {
+                return [`${value.toFixed(1)}%`, "Median Positive Reviews"];
+              }
+              return [value.toLocaleString(), "Number of Games"];
             }}
           />
+          <Legend />
           <Line
             yAxisId="left"
             type="monotone"
-            dataKey="median_positive_percentage"
-            stroke={colors.blue}
-            strokeWidth={3}
-            dot={{ fill: colors.blue, stroke: colors.font2, strokeWidth: 2 }}
-            activeDot={{
-              r: 8,
-              fill: colors.blue,
-              stroke: colors.font2,
-              strokeWidth: 2,
-            }}
-            name="Median Positive Review %"
+            dataKey="median_positive"
+            name="Median Positive Reviews"
+            stroke="#8884d8"
+            dot={false}
           />
           <Line
             yAxisId="right"
             type="monotone"
             dataKey="num_games"
-            stroke={colors.magenta}
-            strokeWidth={3}
-            dot={{ fill: colors.magenta, stroke: colors.font2, strokeWidth: 2 }}
-            activeDot={{
-              r: 8,
-              fill: colors.magenta,
-              stroke: colors.font2,
-              strokeWidth: 2,
-            }}
             name="Number of Games"
+            stroke="#82ca9d"
+            dot={false}
           />
         </LineChart>
       </ResponsiveContainer>
@@ -129,4 +125,4 @@ const ReviewPriceChart = ({ data }) => {
   );
 };
 
-export default ReviewPriceChart;
+export default React.memo(ReviewPriceChart);
