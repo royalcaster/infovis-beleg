@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   ScatterChart,
   Scatter,
@@ -56,12 +56,47 @@ const ReviewsOwnersScatterChart = ({ data }) => {
     () => Math.max(...safeData.map((d) => d.estimated_owners_numeric)),
     [safeData]
   );
+
+  // Debounced state for filtering
   const [reviewRange, setReviewRange] = useState([minReviews, maxReviews]);
   const [ownerRange, setOwnerRange] = useState([minOwners, maxOwners]);
+
+  // Live state for immediate slider feedback
+  const [liveReviewRange, setLiveReviewRange] = useState([
+    minReviews,
+    maxReviews,
+  ]);
+  const [liveOwnerRange, setLiveOwnerRange] = useState([minOwners, maxOwners]);
+
+  // Reset filters now also resets live values
   const resetFilters = () => {
     setReviewRange([minReviews, maxReviews]);
     setOwnerRange([minOwners, maxOwners]);
+    setLiveReviewRange([minReviews, maxReviews]);
+    setLiveOwnerRange([minOwners, maxOwners]);
   };
+
+  // Effect to debounce review range changes
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setReviewRange(liveReviewRange);
+    }, 200); // 200ms delay
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [liveReviewRange]);
+
+  // Effect to debounce owner range changes
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setOwnerRange(liveOwnerRange);
+    }, 200); // 200ms delay
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [liveOwnerRange]);
 
   // Memoize the processed data to prevent unnecessary recalculations
   const processedData = useMemo(() => {
@@ -141,22 +176,22 @@ const ReviewsOwnersScatterChart = ({ data }) => {
             type="range"
             min={minReviews}
             max={maxReviews}
-            value={reviewRange[0]}
+            value={liveReviewRange[0]}
             onChange={(e) =>
-              setReviewRange([Number(e.target.value), reviewRange[1]])
+              setLiveReviewRange([Number(e.target.value), liveReviewRange[1]])
             }
             style={{ flex: 1 }}
           />
-          <span style={{ color: colors.font2 }}>{reviewRange[0]}</span>
+          <span style={{ color: colors.font2 }}>{liveReviewRange[0]}</span>
           <span style={{ color: colors.font2 }}>-</span>
-          <span style={{ color: colors.font2 }}>{reviewRange[1]}</span>
+          <span style={{ color: colors.font2 }}>{liveReviewRange[1]}</span>
           <input
             type="range"
             min={minReviews}
             max={maxReviews}
-            value={reviewRange[1]}
+            value={liveReviewRange[1]}
             onChange={(e) =>
-              setReviewRange([reviewRange[0], Number(e.target.value)])
+              setLiveReviewRange([liveReviewRange[0], Number(e.target.value)])
             }
             style={{ flex: 1 }}
           />
@@ -170,26 +205,26 @@ const ReviewsOwnersScatterChart = ({ data }) => {
             type="range"
             min={minOwners}
             max={maxOwners}
-            value={ownerRange[0]}
+            value={liveOwnerRange[0]}
             onChange={(e) =>
-              setOwnerRange([Number(e.target.value), ownerRange[1]])
+              setLiveOwnerRange([Number(e.target.value), liveOwnerRange[1]])
             }
             style={{ flex: 1 }}
           />
           <span style={{ color: colors.font2 }}>
-            {formatNumber(ownerRange[0])}
+            {formatNumber(liveOwnerRange[0])}
           </span>
           <span style={{ color: colors.font2 }}>-</span>
           <span style={{ color: colors.font2 }}>
-            {formatNumber(ownerRange[1])}
+            {formatNumber(liveOwnerRange[1])}
           </span>
           <input
             type="range"
             min={minOwners}
             max={maxOwners}
-            value={ownerRange[1]}
+            value={liveOwnerRange[1]}
             onChange={(e) =>
-              setOwnerRange([ownerRange[0], Number(e.target.value)])
+              setLiveOwnerRange([liveOwnerRange[0], Number(e.target.value)])
             }
             style={{ flex: 1 }}
           />
