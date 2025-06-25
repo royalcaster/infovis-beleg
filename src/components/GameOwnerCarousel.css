@@ -101,7 +101,6 @@
   transition: background-color 0.2s;
   z-index: 10;
   position: static; /* Remove absolute positioning */
-  cursor: not-allowed;
 }
 
 .nav-button:hover:not(:disabled) {
@@ -115,7 +114,7 @@
 
 .nav-button.prev::before,
 .nav-button.next::before {
-  content: '';
+  content: "";
   border: solid white;
   border-width: 0 3px 3px 0;
   display: inline-block;
@@ -138,4 +137,29 @@
 
 .nav-button.next {
   right: 10px;
-} 
+}
+
+.carousel-heading {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.helper-line {
+  pointer-events: none;
+  border-top: 1.5px dashed #fffa;
+  z-index: 2;
+  animation: dashmove 2s linear infinite;
+}
+
+@keyframes dashmove {
+  to {
+    border-top-color: #fffa;
+    border-top-style: dashed;
+    border-top-width: 1.5px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}

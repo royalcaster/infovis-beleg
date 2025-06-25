@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { colors } from "../colors";
 import "./GameOwnerCarousel.css";
 
@@ -30,9 +30,12 @@ const ITEMS_PER_PAGE = 7;
 const ANCHOR_HEIGHT = 300; // The fixed height for the rightmost bar
 const ITEM_WIDTH = 120; // Must match CSS
 const ITEM_GAP = 30; // Must match CSS
+const LABEL_WIDTH = 40; // px, increased space for the label and gap
 
 const GameOwnerCarousel = ({ data }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [helperY, setHelperY] = useState([0, 0, 0]);
+  const animRef = useRef();
 
   const processedData = useMemo(() => {
     if (!data || data.length === 0) return [];
@@ -83,47 +86,138 @@ const GameOwnerCarousel = ({ data }) => {
   const isPrevDisabled = currentIndex === 0;
   const isNextDisabled = currentIndex >= processedData.length - ITEMS_PER_PAGE;
 
+  // Calculate the anchor and scaling
+  const anchorIndex = Math.min(
+    currentIndex + ITEMS_PER_PAGE - 1,
+    processedData.length - 1
+  );
+  const anchorItem = processedData[anchorIndex];
+  const k =
+    anchorItem && anchorItem.owners > 0 ? ANCHOR_HEIGHT / anchorItem.owners : 0;
+
+  // Target y positions for helper lines
+  const helperValues = [10000, 100000, 1000000];
+  const targetY = helperValues.map((value) => ANCHOR_HEIGHT - value * k);
+
+  // Animate helperY to targetY
+  useEffect(() => {
+    let running = true;
+    function animate() {
+      setHelperY((prev) =>
+        prev.map((y, i) => {
+          const dest = targetY[i];
+          if (y === undefined || isNaN(y)) return dest;
+          const diff = dest - y;
+          if (Math.abs(diff) < 1) return dest;
+          return y + diff * 0.2; // Easing
+        })
+      );
+      if (running && targetY.some((t, i) => Math.abs(t - helperY[i]) > 1)) {
+        animRef.current = requestAnimationFrame(animate);
+      }
+    }
+    animRef.current = requestAnimationFrame(animate);
+    return () => {
+      running = false;
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+    };
+    // eslint-disable-next-line
+  }, [k, currentIndex]);
+
+  // Helper lines for big numbers
+  const helperLines = helperValues.map((value, i) => {
+    const y = helperY[i];
+    if (y < 0 || y > ANCHOR_HEIGHT) return null;
+    return (
+      <div
+        key={value}
+        className="helper-line"
+        style={{
+          position: "absolute",
+          left: LABEL_WIDTH,
+          right: 0,
+          height: 0,
+          borderTop: "1.5px dashed #fffa",
+          top: `${y}px`,
+          zIndex: 2,
+          pointerEvents: "none",
+          transition: "top 0.3s cubic-bezier(0.4,0,0.2,1)",
+          opacity: 0.5,
+        }}
+      >
+        <span
+          style={{
+            position: "absolute",
+            left: -LABEL_WIDTH,
+            width: LABEL_WIDTH - 12,
+            top: -8,
+            color: "#fffa",
+            fontSize: 12,
+            borderRadius: 4,
+            fontWeight: 600,
+            opacity: 0.7,
+            background: "none",
+            padding: 0,
+            textAlign: "right",
+            display: "inline-block",
+            lineHeight: "16px",
+          }}
+        >
+          {value >= 1000000
+            ? `${value / 1000000}M`
+            : value >= 1000
+            ? `${value / 1000}K`
+            : value}
+        </span>
+      </div>
+    );
+  });
+
   if (processedData.length === 0) {
     return null;
   }
 
   return (
-    <div className="carousel-container">
-      <button
-        className="nav-button prev"
-        onClick={handlePrev}
-        disabled={isPrevDisabled}
-      ></button>
+    <div>
+      <h2 className="carousel-heading">Compare player counts</h2>
+      <div className="carousel-container">
+        <button
+          className="nav-button prev"
+          onClick={handlePrev}
+          disabled={isPrevDisabled}
+        ></button>
 
-      <div className="carousel-viewport">
-        <div className="carousel-track" style={trackStyle}>
-          {displayItems.map((game) => (
-            <div key={game.name} className="carousel-item">
-              <span className="player-count">
-                {formatPlayerCount(game.owners)}
-              </span>
-              <div
-                className="game-bar"
-                style={{
-                  height: `${game.height}px`,
-                  backgroundColor: colors.accent7,
-                }}
-              ></div>
-              <div className="game-label">
-                <p className="game-name">{game.name}</p>
+        <div className="carousel-viewport" style={{ position: "relative" }}>
+          {helperLines}
+          <div className="carousel-track" style={trackStyle}>
+            {displayItems.map((game) => (
+              <div key={game.name} className="carousel-item">
+                <span className="player-count">
+                  {formatPlayerCount(game.owners)}
+                </span>
+                <div
+                  className="game-bar"
+                  style={{
+                    height: `${game.height}px`,
+                    backgroundColor: colors.accent7,
+                  }}
+                ></div>
+                <div className="game-label">
+                  <p className="game-name">{game.name}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      <button
-        className="nav-button next"
-        onClick={handleNext}
-        disabled={isNextDisabled}
-      ></button>
+        <button
+          className="nav-button next"
+          onClick={handleNext}
+          disabled={isNextDisabled}
+        ></button>
+      </div>
     </div>
   );
 };
 
-export default GameOwnerCarousel; 
+export default GameOwnerCarousel;
