@@ -22,7 +22,7 @@ const App = () => {
     h5Data: [],
     h6Data: [],
     h7Data: [],
-    randomOwnersData: [],
+    carouselData: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,7 +39,7 @@ const App = () => {
           h5Response,
           h6Response,
           h7Response,
-          randomOwnersResponse,
+          carouselDataResponse,
         ] = await Promise.all([
           fetch("/processed_data/h1_review_percentage_over_time.json"),
           fetch("/processed_data/h2_platforms_vs_owners.json"),
@@ -49,7 +49,7 @@ const App = () => {
           fetch("/processed_data/h5_free_vs_paid.json"),
           fetch("/processed_data/h6_q4_release_impact.json"),
           fetch("/processed_data/h7_median_review_vs_price.json"),
-          fetch("/processed_data/random_game_owners.json"),
+          fetch("/processed_data/carousel_data.json"),
         ]);
 
         if (
@@ -61,7 +61,7 @@ const App = () => {
           !h5Response.ok ||
           !h6Response.ok ||
           !h7Response.ok ||
-          !randomOwnersResponse.ok
+          !carouselDataResponse.ok
         ) {
           throw new Error("Failed to fetch one or more data files");
         }
@@ -75,7 +75,7 @@ const App = () => {
           h5Data,
           h6Data,
           h7Data,
-          randomOwnersData,
+          carouselData,
         ] = await Promise.all([
           h1Response.json(),
           h2Response.json(),
@@ -85,7 +85,7 @@ const App = () => {
           h5Response.json(),
           h6Response.json(),
           h7Response.json(),
-          randomOwnersResponse.json(),
+          carouselDataResponse.json(),
         ]);
 
         setData({
@@ -97,7 +97,7 @@ const App = () => {
           h5Data: h5Data || [],
           h6Data: h6Data || [],
           h7Data: h7Data || [],
-          randomOwnersData: randomOwnersData || [],
+          carouselData: carouselData || [],
         });
         setLoading(false);
       } catch (err) {
@@ -126,7 +126,7 @@ const App = () => {
       <div className="gradient-div"></div>
       <div className="App-container">
         <div className="content-container">
-          <GameOwnerCarousel data={data.randomOwnersData} />
+          <GameOwnerCarousel data={data.carouselData} />
           <div className="chart-grid">
             <ReviewPercentageOverTimeChart data={data.h1Data} />
             <PlatformsVsOwnersChart data={data.h2Data} />

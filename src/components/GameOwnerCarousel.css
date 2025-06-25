@@ -1,65 +1,141 @@
 .carousel-container {
-  height: 400px; /* Set a fixed height */
-  overflow-x: auto;
+  position: relative;
+  height: 400px;
   background-color: var(--background-color-2);
-  padding: 20px 10px;
   margin-bottom: 2rem;
   border-radius: 8px;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pushes buttons to the sides */
+  padding: 0 10px; /* Give buttons some space */
 }
 
-.carousel-container::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and Opera */
+.carousel-viewport {
+  width: 1020px; /* (120px item * 7) + (30px gap * 6) */
+  height: 100%;
+  overflow: hidden;
 }
 
 .carousel-track {
   display: flex;
-  flex-direction: row;
-  align-items: flex-end; /* Align squares to the bottom */
   gap: 30px;
-  width: max-content;
-  min-width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
 }
 
 .carousel-item {
+  width: 120px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Aligns content (square, label) to the bottom */
-  align-items: center;
-  text-align: center;
-  gap: 10px;
-  height: 380px; /* Give each item a fixed, consistent height */
+  justify-content: flex-end;
+  flex-shrink: 0; /* Prevent items from shrinking */
 }
 
-.game-square-wrapper {
+.game-bar {
+  width: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease-in-out, filter 0.2s ease-in-out;
+  position: relative;
   display: flex;
-  align-items: flex-end;
+  justify-content: center;
 }
 
-.game-square {
-  transition: transform 0.2s ease-in-out;
+.player-count {
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  margin-bottom: 5px; /* Space between count and bar */
 }
 
-.carousel-item:hover .game-square {
-  transform: scale(1.05);
+.carousel-item:hover .game-bar {
+  filter: brightness(1.2);
 }
 
 .game-label {
+  height: 90px; /* Increase height to fit banner */
   width: 120px;
   word-wrap: break-word;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes content to top/bottom */
+  text-align: center;
+}
+
+.game-banner {
+  width: 100%;
+  height: 56px; /* 120px * (9/16 aspect ratio) roughly */
+  object-fit: cover;
+  border-radius: 4px;
 }
 
 .game-name {
   font-weight: 600;
-  color: var(--font-color-2);
+  color: white;
   margin: 0;
   font-size: 0.9rem;
 }
 
 .game-owners {
   font-weight: 400;
-  color: var(--font-color-3);
+  color: white;
   margin: 0;
   font-size: 0.8rem;
+}
+
+.nav-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  z-index: 10;
+  position: static; /* Remove absolute positioning */
+  cursor: not-allowed;
+}
+
+.nav-button:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.nav-button.prev::before,
+.nav-button.next::before {
+  content: '';
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.nav-button.prev::before {
+  transform: rotate(135deg);
+  margin-left: 3px; /* Nudge for centering */
+}
+
+.nav-button.next::before {
+  transform: rotate(-45deg);
+  margin-right: 3px; /* Nudge for centering */
+}
+
+.nav-button.prev {
+  left: 10px;
+}
+
+.nav-button.next {
+  right: 10px;
 } 
