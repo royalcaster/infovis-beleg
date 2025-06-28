@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { colors, hexToRgba } from "../colors";
+import ChartHeading from "./ChartHeading";
 
 const formatNumber = (num) => {
   if (num === null || num === undefined || num === "N/A") return "N/A";
@@ -35,7 +36,7 @@ const PlatformOwnersChart = ({ data }) => {
 
   return (
     <section className="chart-section">
-      <h1 className="chart-title">Average Estimated Owners by Platform Count</h1>
+      <ChartHeading>Average Estimated Owners by Platform Count</ChartHeading>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={data}
@@ -56,14 +57,18 @@ const PlatformOwnersChart = ({ data }) => {
           <Tooltip
             formatter={(value, name) => [formatNumber(value), name]}
             contentStyle={{
-                backgroundColor: hexToRgba(colors.background1, 0.5),
-                borderColor: 'rgba(60, 60, 60, 0)',
-                borderRadius: '5px',
-                color: colors.font2,
-                backdropFilter: "blur(5px)",
-                WebkitBackdropFilter: "blur(5px)",
+              backgroundColor: hexToRgba(colors.background1, 0.5),
+              borderColor: "rgba(60, 60, 60, 0)",
+              borderRadius: "5px",
+              color: colors.font2,
+              backdropFilter: "blur(5px)",
+              WebkitBackdropFilter: "blur(5px)",
             }}
-            labelStyle={{ color: colors.font2, fontWeight: 'bold', margin: "5px" }}
+            labelStyle={{
+              color: colors.font2,
+              fontWeight: "bold",
+              margin: "5px",
+            }}
             itemStyle={{ color: colors.font2 }}
             cursor={false}
           />

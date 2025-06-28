@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { colors, hexToRgba } from "../colors";
+import ChartHeading from "./ChartHeading";
 
 const GenrePriceDominanceChart = ({ data }) => {
   // Step C1: Validate data shape
@@ -107,7 +108,7 @@ const GenrePriceDominanceChart = ({ data }) => {
 
   return (
     <section className="chart-section">
-      <h1 className="chart-title">Top Genres by Price Range</h1>
+      <ChartHeading>Top Genres by Price Range</ChartHeading>
       <ResponsiveContainer width="100%" height={500}>
         <BarChart
           data={processedData}

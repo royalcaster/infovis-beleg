@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { colors, hexToRgba } from "../colors";
 import { formatPercentage } from "../utils";
+import ChartHeading from "./ChartHeading";
 
 const formatYAxisTick = (tickValue) => {
   if (tickValue === 0) {
@@ -61,6 +62,7 @@ const ReviewPercentageOverTimeChart = ({ data }) => {
 
   return (
     <div>
+      <ChartHeading>Avg. Positive Review % Over Time</ChartHeading>
       <div
         style={{
           marginBottom: 20,

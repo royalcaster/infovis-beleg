@@ -9,6 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import ChartHeading from "./ChartHeading";
 
 const Q4ReleaseImpactChart = ({ data }) => {
   // Step C1: Validate data shape
@@ -48,6 +49,7 @@ const Q4ReleaseImpactChart = ({ data }) => {
 
   return (
     <div style={{ width: "100%", height: 400 }}>
+      <ChartHeading>Impact of Q4 Release on Game Success</ChartHeading>
       <ResponsiveContainer>
         <BarChart
           data={processedData}

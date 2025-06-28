@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { colors, hexToRgba } from "../colors";
 import { formatPercentage } from "../utils";
+import ChartHeading from "./ChartHeading";
 
 const formatNumber = (num) => {
   if (num === null || num === undefined || num === "N/A") return "N/A";
@@ -64,7 +65,7 @@ const ReviewPriceChart = ({ data }) => {
 
   return (
     <section className="chart-section">
-      <h1 className="chart-title">Price Impact on Game Reviews</h1>
+      <ChartHeading>Price Impact on Game Reviews</ChartHeading>
       <ResponsiveContainer width="100%" height={500}>
         <LineChart
           data={processedData}

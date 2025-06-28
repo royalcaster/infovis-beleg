@@ -147,7 +147,7 @@ const Header = () => {
     zIndex: 1000,
     overflow: "hidden",
     height: isSticky ? STICKY_HEADER_HEIGHT : HEADER_HEIGHT,
-    backgroundColor: colors.background3,
+    backgroundColor: "rgba(15,17,30,0.3)",
     marginBottom: -1,
   };
 

@@ -11,6 +11,7 @@ import FreeVsPaidChart from "./components/FreeVsPaidChart";
 import FilterPanel from "./components/FilterPanel";
 import ReviewsOwnersBinnedChart from "./components/ReviewsOwnersBinnedChart";
 import GameOwnerCarousel from "./components/GameOwnerCarousel";
+import ChartHeading from "./components/ChartHeading";
 
 const App = () => {
   const [data, setData] = useState({
@@ -126,16 +127,34 @@ const App = () => {
       <div className="gradient-div"></div>
       <div className="App-container">
         <div className="content-container">
-          <GameOwnerCarousel data={data.carouselData} />
           <div className="chart-grid">
-            <ReviewPercentageOverTimeChart data={data.h1Data} />
-            <PlatformsVsOwnersChart data={data.h2Data} />
-            <ReviewsOwnersBinnedChart data={data.h3BinnedData} />
-            <ReviewsOwnersScatterChart data={data.h3ScatterData} />
-            <GenrePriceDominanceChart data={data.h4Data} />
-            <FreeVsPaidChart data={data.h5Data} />
-            <Q4ReleaseImpactChart data={data.h6Data} />
-            <ReviewPriceChart data={data.h7Data} />
+            <div className="chart-section-wrapper">
+              <GameOwnerCarousel data={data.carouselData} />
+            </div>
+            <div className="chart-section-wrapper">
+              <ReviewPercentageOverTimeChart data={data.h1Data} />
+            </div>
+            {/* <div className="chart-section-wrapper">
+              <PlatformsVsOwnersChart data={data.h2Data} />
+            </div>
+            <div className="chart-section-wrapper">
+              <ReviewsOwnersBinnedChart data={data.h3BinnedData} />
+            </div>
+            <div className="chart-section-wrapper">
+              <ReviewsOwnersScatterChart data={data.h3ScatterData} />
+            </div> */}
+            <div className="chart-section-wrapper">
+              <GenrePriceDominanceChart data={data.h4Data} />
+            </div>
+            <div className="chart-section-wrapper">
+              <FreeVsPaidChart data={data.h5Data} />
+            </div>
+            <div className="chart-section-wrapper">
+              <Q4ReleaseImpactChart data={data.h6Data} />
+            </div>
+            <div className="chart-section-wrapper">
+              <ReviewPriceChart data={data.h7Data} />
+            </div>
           </div>
         </div>
       </div>

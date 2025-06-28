@@ -10,6 +10,7 @@ import {
   Label,
 } from "recharts";
 import { colors, hexToRgba } from "../colors";
+import ChartHeading from "./ChartHeading";
 
 const formatNumber = (num) => {
   if (num === null || num === undefined) return "N/A";
@@ -32,9 +33,9 @@ const ReviewsOwnersBinnedChart = ({ data }) => {
 
   return (
     <section className="chart-section">
-      <h1 className="chart-title">
+      <ChartHeading>
         Average Estimated Owners by Positive Review Bins
-      </h1>
+      </ChartHeading>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={chartData}
@@ -81,10 +82,7 @@ const ReviewsOwnersBinnedChart = ({ data }) => {
               color: colors.font2,
               backdropFilter: "blur(5px)",
             }}
-            formatter={(value, name) => [
-              formatNumber(value),
-              "Avg. Owners",
-            ]}
+            formatter={(value, name) => [formatNumber(value), "Avg. Owners"]}
             labelFormatter={(label) => `Reviews: ${label}`}
           />
           <Bar
@@ -98,4 +96,4 @@ const ReviewsOwnersBinnedChart = ({ data }) => {
   );
 };
 
-export default ReviewsOwnersBinnedChart; 
+export default ReviewsOwnersBinnedChart;

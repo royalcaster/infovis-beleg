@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { colors } from "../colors";
 import "./GameOwnerCarousel.css";
+import ChartHeading from "./ChartHeading";
 
 // Helper to parse owner string
 const parseOwnersMidpoint = (ownerStr) => {
@@ -179,7 +180,7 @@ const GameOwnerCarousel = ({ data }) => {
 
   return (
     <div>
-      <h2 className="carousel-heading">Compare player counts</h2>
+      <ChartHeading>Compare player counts</ChartHeading>
       <div className="carousel-container">
         <button
           className="nav-button prev"

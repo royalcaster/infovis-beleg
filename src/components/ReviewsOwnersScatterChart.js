@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { colors, hexToRgba } from "../colors";
+import ChartHeading from "./ChartHeading";
 
 const formatNumber = (num) => {
   if (num === null || num === undefined || num === "N/A") return "N/A";
@@ -130,9 +131,9 @@ const ReviewsOwnersScatterChart = ({ data }) => {
 
   return (
     <section className="chart-section">
-      <h1 className="chart-title">
+      <ChartHeading>
         Relationship Between Positive Reviews and Estimated Owners
-      </h1>
+      </ChartHeading>
       {/* Filter Controls */}
       <div
         style={{

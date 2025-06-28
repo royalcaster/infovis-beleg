@@ -23,8 +23,8 @@ body {
   z-index: 1000;
   background: linear-gradient(
     to bottom,
-    rgba(15, 17, 30, 0.95),
-    rgba(15, 17, 30, 0.8)
+    rgba(15, 17, 30, 0.3),
+    rgba(15, 17, 30, 0.1)
   );
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -99,10 +99,13 @@ body {
 }
 
 .chart-section {
-  padding: 30px;
+  padding: 30px 0 30px 0;
   border-radius: 8px;
   margin-top: 2rem;
   margin-bottom: 2rem;
+  text-align: left;
+  padding-left: 0;
+  margin-left: 0;
 }
 
 .chart-title {
@@ -111,6 +114,7 @@ body {
   padding-bottom: 10px;
   margin-bottom: 20px;
   font-size: 2rem;
+  text-align: left !important;
 }
 
 .error-message {
@@ -323,4 +327,24 @@ body {
 /* Add padding to the bottom of the content to account for the filter panel */
 .content-container {
   padding-bottom: 60px;
+}
+
+.chart-section-wrapper {
+  margin-bottom: 10rem;
+  text-align: left;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.chart-section-wrapper:first-child {
+  margin-top: 5rem;
+}
+
+.chart-section-wrapper:last-child {
+  margin-bottom: 0;
+}
+
+h2,
+.carousel-heading {
+  text-align: left !important;
 }
