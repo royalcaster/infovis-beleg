@@ -12,6 +12,7 @@ import FilterPanel from "./components/FilterPanel";
 import ReviewsOwnersBinnedChart from "./components/ReviewsOwnersBinnedChart";
 import GameOwnerCarousel from "./components/GameOwnerCarousel";
 import ChartHeading from "./components/ChartHeading";
+import DeveloperUniverse from "./components/DeveloperUniverse";
 
 const App = () => {
   const [data, setData] = useState({
@@ -130,6 +131,9 @@ const App = () => {
           <div className="chart-grid">
             <div className="chart-section-wrapper">
               <GameOwnerCarousel data={data.carouselData} />
+            </div>
+            <div className="chart-section-wrapper">
+              <DeveloperUniverse />
             </div>
             <div className="chart-section-wrapper">
               <ReviewPercentageOverTimeChart data={data.h1Data} />
