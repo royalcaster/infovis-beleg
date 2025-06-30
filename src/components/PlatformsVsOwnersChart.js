@@ -62,6 +62,19 @@ const PlatformsVsOwnersChart = ({ data }) => {
         />
         <Bar dataKey="owners" name="Owners" fill="#82ca9d" />
       </BarChart>
+      <p
+        style={{
+          color: "#ccc",
+          fontSize: "1.08rem",
+          maxWidth: 700,
+          margin: "24px 0 0 0",
+        }}
+      >
+        This chart compares the average number of owners for games released on
+        different platforms. Each bar shows a platform and the typical player
+        base for games on that platform, helping you see which platforms tend to
+        have the largest audiences.
+      </p>
     </ResponsiveContainer>
   );
 };

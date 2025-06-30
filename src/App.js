@@ -15,6 +15,44 @@ import ChartHeading from "./components/ChartHeading";
 import DeveloperUniverse from "./components/DeveloperUniverse";
 import BackgroundCarousels from "./components/BackgroundCarousels";
 import SteamTimeMachine from "./components/SteamTimeMachine";
+import DataOverview from "./components/DataOverview";
+
+// Add a fullscreen loading spinner component
+const LoadingSpinner = ({ visible }) => (
+  <div
+    className="fullscreen-spinner"
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      background: "#121622",
+      zIndex: 9999,
+      display: visible ? "flex" : "none",
+      alignItems: "center",
+      justifyContent: "center",
+      transition: "opacity 0.7s cubic-bezier(0.4,0,0.2,1)",
+      opacity: visible ? 1 : 0,
+      pointerEvents: visible ? "auto" : "none",
+    }}
+  >
+    <div className="spinner-inner">
+      <div className="spinner" />
+      <span
+        style={{
+          color: "#fff",
+          fontSize: 22,
+          marginTop: 24,
+          fontWeight: 600,
+          letterSpacing: 1,
+        }}
+      >
+        Loading...
+      </span>
+    </div>
+  </div>
+);
 
 const App = () => {
   const [data, setData] = useState({
@@ -30,6 +68,8 @@ const App = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showSpinner, setShowSpinner] = useState(true);
+  const [generalInfo, setGeneralInfo] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +84,7 @@ const App = () => {
           h6Response,
           h7Response,
           carouselDataResponse,
+          generalInfoResponse,
         ] = await Promise.all([
           fetch("/processed_data/h1_review_percentage_over_time.json"),
           fetch("/processed_data/h2_platforms_vs_owners.json"),
@@ -54,6 +95,7 @@ const App = () => {
           fetch("/processed_data/h6_q4_release_impact.json"),
           fetch("/processed_data/h7_median_review_vs_price.json"),
           fetch("/processed_data/carousel_data.json"),
+          fetch("/processed_data/general_info.json"),
         ]);
 
         if (
@@ -65,7 +107,8 @@ const App = () => {
           !h5Response.ok ||
           !h6Response.ok ||
           !h7Response.ok ||
-          !carouselDataResponse.ok
+          !carouselDataResponse.ok ||
+          !generalInfoResponse.ok
         ) {
           throw new Error("Failed to fetch one or more data files");
         }
@@ -80,6 +123,7 @@ const App = () => {
           h6Data,
           h7Data,
           carouselData,
+          generalInfo,
         ] = await Promise.all([
           h1Response.json(),
           h2Response.json(),
@@ -90,6 +134,7 @@ const App = () => {
           h6Response.json(),
           h7Response.json(),
           carouselDataResponse.json(),
+          generalInfoResponse.json(),
         ]);
 
         setData({
@@ -103,6 +148,7 @@ const App = () => {
           h7Data: h7Data || [],
           carouselData: carouselData || [],
         });
+        setGeneralInfo(generalInfo || null);
         setLoading(false);
       } catch (err) {
         console.error("Error loading data:", err);
@@ -116,8 +162,17 @@ const App = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // Show spinner for at least 1 second
+    const timer = setTimeout(() => {
+      setShowSpinner(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    // Don't show the default loading, let the spinner handle it
+    return null;
   }
 
   if (error) {
@@ -126,6 +181,7 @@ const App = () => {
 
   return (
     <div style={{ position: "relative", zIndex: 0 }}>
+      <LoadingSpinner visible={showSpinner} />
       <BackgroundCarousels />
       <div style={{ position: "relative", zIndex: 2 }}>
         <div className="App">
@@ -135,10 +191,14 @@ const App = () => {
             <div className="content-container">
               <div className="chart-grid">
                 <div className="chart-section-wrapper">
+                  {generalInfo && <DataOverview info={generalInfo} />}
+                </div>
+                <div className="chart-section-wrapper">
                   <GameOwnerCarousel data={data.carouselData} />
                 </div>
                 <div className="chart-section-wrapper">
                   <DeveloperUniverse />
+                  <div style={{ height: 150 }}></div>
                 </div>
                 <div className="chart-section-wrapper">
                   <ReviewPercentageOverTimeChart data={data.h1Data} />

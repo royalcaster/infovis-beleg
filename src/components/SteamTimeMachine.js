@@ -386,39 +386,34 @@ const SteamTimeMachine = () => {
   };
 
   return (
-    <div
-      style={{
-        background: "transparent",
-        borderRadius: 18,
-      }}
-    >
+    <div style={{ width: "100%", position: "relative" }}>
       <h2
         style={{
-          color: "#fff",
+          fontSize: "2rem",
           fontWeight: 800,
-          fontSize: 28,
-          margin: 0,
+          color: "#fff",
+          marginBottom: "1.2rem",
+          marginTop: 0,
+          letterSpacing: "-1px",
+          textShadow: "0 2px 8px rgba(0,0,0,0.15)",
+          textAlign: "left",
         }}
       >
         Steam Time Machine
       </h2>
       <p
         style={{
-          color: "#e0e0e0",
-          fontSize: 17,
+          color: "#ccc",
+          fontSize: "1.08rem",
           maxWidth: 700,
-          margin: "18px 0 24px 0",
-          lineHeight: 1.6,
-          textAlign: "left",
+          margin: "0 0 24px 0",
         }}
       >
-        Steam Time Machine is an interactive timeline of the most popular Steam
-        games, year by year. Each point represents a game, positioned by its
-        release year (horizontal) and the number of positive user ratings
-        (vertical). The size of each point reflects the estimated number of
-        players—bigger circles mean more players. The color transitions from
-        white (oldest games) to blue (newest games), helping you spot trends
-        over time. Pan and zoom to explore how the Steam universe has evolved!
+        This interactive timeline lets you explore the most popular Steam games
+        released each year. Each point is a game, positioned by release year and
+        number of positive ratings. Use the genre filter, zoom, and tooltips to
+        discover trends, breakout hits, and how the Steam landscape has evolved
+        over time.
       </p>
       <div style={{ textAlign: "left", marginBottom: 18 }}>
         <select

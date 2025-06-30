@@ -204,17 +204,14 @@ const DeveloperUniverse = () => {
   };
 
   return (
-    <div>
-      <h1
-        style={{
-          color: "#fff",
-          fontSize: "2.2rem",
-          marginBottom: 8,
-          marginTop: 0,
-        }}
-      >
-        Developers & Publishers
-      </h1>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: isFullscreen ? "100vh" : 700,
+      }}
+    >
+      <ChartHeading>Developers & Publishers</ChartHeading>
       <p
         style={{
           color: "#ccc",
@@ -223,13 +220,12 @@ const DeveloperUniverse = () => {
           margin: "0 0 24px 0",
         }}
       >
-        This network graph visualizes the relationships between game developers
-        and publishers on Steam. Each node represents a developer or publisher,
-        with node size indicating the number of games they are associated with.
-        The color of each node reflects the average review score of their games
-        (from red for lower scores to green for higher scores). Connections
-        (edges) between nodes indicate that the connected developers or
-        publishers have collaborated on at least one game.
+        This interactive network graph maps the relationships between major game
+        developers and publishers on Steam. Each node is a company, sized by the
+        number of games they've released and colored by their average review
+        score. Lines connect companies that have collaborated. Click a node to
+        explore details and connections, or use the controls to reset or go
+        fullscreen.
       </p>
       {/* Interactive area and legend in a column flex container */}
       <div style={{ height: 30 }}></div>
@@ -455,8 +451,9 @@ const DeveloperUniverse = () => {
                       minWidth: 70,
                       textAlign: "center",
                       boxShadow: "0 1px 6px 0 #0004",
-                      border: "none",
+                      border: "2px solid rgba(20,20,30,0.55)",
                       display: "inline-block",
+                      textShadow: "0 2px 8px rgba(0,0,0,0.25), 0 1px 0 #222",
                     }}
                   >
                     {selectedNode
@@ -581,7 +578,7 @@ const DeveloperUniverse = () => {
             <ForceGraph2D
               ref={graphRef}
               graphData={processedGraphData}
-              nodeLabel={() => ""} // Hide hover inside the graph
+              nodeLabel={(node) => node.id}
               nodeVal="size"
               nodeColor={(node) => {
                 if (

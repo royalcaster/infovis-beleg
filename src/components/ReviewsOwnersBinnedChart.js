@@ -36,6 +36,19 @@ const ReviewsOwnersBinnedChart = ({ data }) => {
       <ChartHeading>
         Average Estimated Owners by Positive Review Bins
       </ChartHeading>
+      <p
+        style={{
+          color: "#ccc",
+          fontSize: "1.08rem",
+          maxWidth: 700,
+          margin: "0 0 24px 0",
+        }}
+      >
+        This chart groups games by the number of positive reviews they have
+        received and shows the average number of owners in each group. It helps
+        you see how player counts relate to review milestones, revealing whether
+        more reviews generally mean more players.
+      </p>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={chartData}

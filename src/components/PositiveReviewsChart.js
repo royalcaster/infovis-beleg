@@ -14,7 +14,7 @@ import { formatPercentage } from "../utils";
 
 const formatYAxisTick = (tickValue) => {
   if (tickValue === 0) {
-    return '';
+    return "";
   }
   return formatPercentage(tickValue);
 };
@@ -32,6 +32,18 @@ const PositiveReviewsChart = ({ data }) => {
   return (
     <section className="chart-section">
       <h1 className="chart-title">Positive reviews over time</h1>
+      <p
+        style={{
+          color: "#ccc",
+          fontSize: "1.08rem",
+          maxWidth: 700,
+          margin: "0 0 24px 0",
+        }}
+      >
+        This chart tracks how the average percentage of positive reviews for
+        Steam games has changed over the years. Each point represents a year,
+        showing whether player satisfaction is rising or falling over time.
+      </p>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
           data={data}
@@ -49,32 +61,43 @@ const PositiveReviewsChart = ({ data }) => {
             tickFormatter={formatYAxisTick}
             allowDecimals={false}
             stroke={colors.font2}
-            tick={{ fill: colors.font2, fontSize: 14, dx: -10}}
+            tick={{ fill: colors.font2, fontSize: 14, dx: -10 }}
           />
           <Tooltip
             formatter={(value) => formatPercentage(value)}
             contentStyle={{
               backgroundColor: hexToRgba(colors.blue, 0.1),
-              borderColor: 'rgba(60, 60, 60, 0)',
-              borderRadius: '5px',
+              borderColor: "rgba(60, 60, 60, 0)",
+              borderRadius: "5px",
               color: colors.font2,
               backdropFilter: "blur(5px)",
-              WebkitBackdropFilter: "blur(5px)"
+              WebkitBackdropFilter: "blur(5px)",
             }}
-            labelStyle={{ color: colors.font2, fontWeight: 'bold', margin: "5px" }}
+            labelStyle={{
+              color: colors.font2,
+              fontWeight: "bold",
+              margin: "5px",
+            }}
             itemStyle={{ color: colors.font2 }}
           />
           <Legend
             verticalAlign="top"
-            wrapperStyle={{paddingBottom: '20px' }}
-            formatter={(value, entry, index) => <span style={{ color: colors.blue }}>{value}</span>}
+            wrapperStyle={{ paddingBottom: "20px" }}
+            formatter={(value, entry, index) => (
+              <span style={{ color: colors.blue }}>{value}</span>
+            )}
           />
           <Line
             type="monotone"
             dataKey="avg_positive_percentage"
             stroke={colors.blue}
             strokeWidth={3}
-            activeDot={{ r: 8, fill: colors.blue, stroke: colors.font2, strokeWidth: 2 }}
+            activeDot={{
+              r: 8,
+              fill: colors.blue,
+              stroke: colors.font2,
+              strokeWidth: 2,
+            }}
             name="Average positive review percentage "
             dot={false}
           />

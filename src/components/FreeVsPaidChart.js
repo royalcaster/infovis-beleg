@@ -32,6 +32,19 @@ const FreeVsPaidChart = ({ data }) => {
   return (
     <div>
       <ChartHeading>Free vs Paid Games</ChartHeading>
+      <p
+        style={{
+          color: "#ccc",
+          fontSize: "1.08rem",
+          maxWidth: 700,
+          margin: "0 0 24px 0",
+        }}
+      >
+        This chart compares the number of free-to-play games versus paid games
+        on Steam. Each slice of the pie represents the proportion of games in
+        each category, helping you quickly see how common free games are
+        compared to paid ones.
+      </p>
       <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie

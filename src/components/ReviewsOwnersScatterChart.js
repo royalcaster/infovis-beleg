@@ -134,6 +134,20 @@ const ReviewsOwnersScatterChart = ({ data }) => {
       <ChartHeading>
         Relationship Between Positive Reviews and Estimated Owners
       </ChartHeading>
+      <p
+        style={{
+          color: "#ccc",
+          fontSize: "1.08rem",
+          maxWidth: 700,
+          margin: "0 0 24px 0",
+        }}
+      >
+        This scatter plot shows the relationship between the number of positive
+        reviews and the estimated number of owners for each game. Each point
+        represents a game—games further to the right have more positive reviews,
+        and those higher up have more owners. Use the filters to focus on
+        specific ranges and spot trends or outliers.
+      </p>
       {/* Filter Controls */}
       <div
         style={{

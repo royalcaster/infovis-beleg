@@ -109,6 +109,19 @@ const GenrePriceDominanceChart = ({ data }) => {
   return (
     <section className="chart-section">
       <ChartHeading>Top Genres by Price Range</ChartHeading>
+      <p
+        style={{
+          color: "#ccc",
+          fontSize: "1.08rem",
+          maxWidth: 700,
+          margin: "0 0 24px 0",
+        }}
+      >
+        This chart shows which game genres are most common in each price range.
+        Each bar is divided by genre, so you can see how the mix of genres
+        changes from free games to the most expensive ones. Look for patterns to
+        discover which genres dominate at different price points.
+      </p>
       <ResponsiveContainer width="100%" height={500}>
         <BarChart
           data={processedData}
