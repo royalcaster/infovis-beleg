@@ -4,7 +4,7 @@ const ROW_HEIGHT = 200;
 const SCROLL_SPEED = 40; // px/sec
 const IMAGES_PER_ROW = 30;
 const BLUR_AMOUNT = 14;
-const DARK_OVERLAY = "rgba(10, 10, 20, 0.82)";
+const DARK_OVERLAY = "rgba(10, 10, 20, 0.90)";
 
 const BackgroundCarousels = () => {
   const [imageUrls, setImageUrls] = useState([]);

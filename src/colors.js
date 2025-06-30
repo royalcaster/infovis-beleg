@@ -1,3 +1,5 @@
+import * as d3 from "d3-scale-chromatic";
+
 export const colors = {
   background1: "#0f111e",
   background2: "#1a1c2e",
@@ -23,3 +25,12 @@ export const hexToRgba = (hex, alpha) => {
   const b = parseInt(hex.slice(5, 7), 16);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
+
+// Centralized review color scale (red-yellow-green)
+export function getReviewColor(percent) {
+  // Clamp percent to [30, 95]
+  const p = Math.max(30, Math.min(95, percent));
+  // Normalize to [0, 1] for d3.interpolateRdYlGn
+  const t = (p - 30) / (95 - 30);
+  return d3.interpolateRdYlGn(t);
+}

@@ -18,30 +18,14 @@ import {
   FaCompress,
   FaRedo,
 } from "react-icons/fa";
-
-function getReviewColor(percent) {
-  // Clamp percent between 30 and 95
-  const p = Math.max(30, Math.min(95, percent));
-  // Linear interpolation: 30% = red (#d7191c), 95% = green (#1a9641)
-  // We'll interpolate in RGB space
-  const r1 = 215,
-    g1 = 25,
-    b1 = 28; // #d7191c
-  const r2 = 26,
-    g2 = 150,
-    b2 = 65; // #1a9641
-  const t = (p - 30) / (95 - 30);
-  const r = Math.round(r1 + (r2 - r1) * t);
-  const g = Math.round(g1 + (g2 - g1) * t);
-  const b = Math.round(b1 + (b2 - b1) * t);
-  return `rgb(${r},${g},${b})`;
-}
+import { getReviewColor } from "../colors";
 
 const DeveloperUniverse = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [loading, setLoading] = useState(true);
   const [showOrphanNodes, setShowOrphanNodes] = useState(false);
   const [hoveredNode, setHoveredNode] = useState(null);
+  const [selectedNode, setSelectedNode] = useState(null);
   const graphRef = React.useRef();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const fullscreenRef = useRef(null);
@@ -81,18 +65,13 @@ const DeveloperUniverse = () => {
     const sizeScale = d3
       .scaleLinear()
       .domain([minGames > 0 ? minGames : 1, maxGames])
-      .range([10, 2000]);
-
-    // Domain for review scores is roughly 0-100%
-    const colorScale = d3
-      .scaleSequential(d3.interpolateRdYlGn)
-      .domain([30, 95]); // Use a more focused range for better color distinction
+      .range([10, 800]);
 
     const finalNodes = filteredNodes.map((node) => {
       // Node size based on number of games
-      const size = sizeScale(node.game_count || 1);
+      const size = sizeScale(node.game_count || 1) * 0.25;
       // Node color based on average review score
-      const color = colorScale(node.avg_review_score || 0);
+      const color = getReviewColor(node.avg_review_score || 0);
       return { ...node, size, color };
     });
 
@@ -135,9 +114,24 @@ const DeveloperUniverse = () => {
     }
   }, [loading, processedGraphData]);
 
-  const handleNodeHover = useCallback((node) => {
-    setHoveredNode(node);
+  const handleNodeHover = useCallback(
+    (node) => {
+      if (!selectedNode) setHoveredNode(node);
+    },
+    [selectedNode]
+  );
+
+  const handleNodeClick = useCallback((node) => {
+    setSelectedNode(node);
+    setHoveredNode(null);
   }, []);
+
+  const handleBackgroundClick = (e) => {
+    if (e.target.classList.contains("force-graph-container")) {
+      setSelectedNode(null);
+      setHoveredNode(null);
+    }
+  };
 
   const handleResetLayout = () => {
     if (graphRef.current) {
@@ -238,6 +232,7 @@ const DeveloperUniverse = () => {
         publishers have collaborated on at least one game.
       </p>
       {/* Interactive area and legend in a column flex container */}
+      <div style={{ height: 30 }}></div>
       <div
         style={{
           display: "flex",
@@ -264,6 +259,8 @@ const DeveloperUniverse = () => {
             background: isFullscreen ? "rgba(10,10,20,0.95)" : "none",
             transition: "all 0.2s",
           }}
+          onClick={handleBackgroundClick}
+          className="force-graph-container"
         >
           {/* Details container */}
           <div
@@ -292,7 +289,7 @@ const DeveloperUniverse = () => {
               transition: "height 0.2s",
             }}
           >
-            {hoveredNode ? (
+            {selectedNode || hoveredNode ? (
               <div style={{ width: "100%" }}>
                 <div
                   style={{
@@ -303,9 +300,14 @@ const DeveloperUniverse = () => {
                     letterSpacing: 0.5,
                   }}
                 >
-                  {hoveredNode.type &&
-                    hoveredNode.type.charAt(0).toUpperCase() +
-                      hoveredNode.type.slice(1)}
+                  {selectedNode
+                    ? selectedNode.type &&
+                      selectedNode.type.charAt(0).toUpperCase() +
+                        selectedNode.type.slice(1)
+                    : hoveredNode &&
+                      hoveredNode.type &&
+                      hoveredNode.type.charAt(0).toUpperCase() +
+                        hoveredNode.type.slice(1)}
                 </div>
                 <div
                   style={{
@@ -320,7 +322,9 @@ const DeveloperUniverse = () => {
                     letterSpacing: 0.2,
                   }}
                 >
-                  {hoveredNode.id}
+                  {selectedNode
+                    ? selectedNode.id
+                    : hoveredNode && hoveredNode.id}
                 </div>
                 {/* Stat row: Games, Players */}
                 <div
@@ -372,7 +376,9 @@ const DeveloperUniverse = () => {
                           lineHeight: 1,
                         }}
                       >
-                        {hoveredNode.game_count}
+                        {selectedNode
+                          ? selectedNode.game_count
+                          : hoveredNode && hoveredNode.game_count}
                       </span>
                     </div>
                   </div>
@@ -414,7 +420,10 @@ const DeveloperUniverse = () => {
                           lineHeight: 1,
                         }}
                       >
-                        {formatOwners(hoveredNode.total_owners)}
+                        {selectedNode
+                          ? formatOwners(selectedNode.total_owners)
+                          : hoveredNode &&
+                            formatOwners(hoveredNode.total_owners)}
                       </span>
                     </div>
                   </div>
@@ -434,7 +443,9 @@ const DeveloperUniverse = () => {
                 >
                   <span
                     style={{
-                      background: getReviewColor(hoveredNode.avg_review_score),
+                      background: selectedNode
+                        ? getReviewColor(selectedNode.avg_review_score)
+                        : getReviewColor(hoveredNode.avg_review_score),
                       borderRadius: 16,
                       padding: "4px 18px",
                       color: "#fff",
@@ -448,63 +459,83 @@ const DeveloperUniverse = () => {
                       display: "inline-block",
                     }}
                   >
-                    {hoveredNode.avg_review_score}%
+                    {selectedNode
+                      ? selectedNode.avg_review_score
+                      : hoveredNode && hoveredNode.avg_review_score}
+                    %
                   </span>
                 </div>
-                {hoveredNode.neighbors && hoveredNode.neighbors.length > 0 && (
-                  <div style={{ marginTop: 10, width: "100%" }}>
-                    <div
-                      style={{
-                        color: "#aaa",
-                        fontSize: 15,
-                        fontWeight: 500,
-                        marginBottom: 8,
-                      }}
-                    >
-                      Related
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: 8,
-                        marginBottom: 8,
-                      }}
-                    >
-                      {hoveredNode.neighbors.slice(0, 10).map((n) => (
-                        <span
-                          key={n.id}
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            padding: "2px 14px 2px 10px",
-                            borderRadius: 20,
-                            background: "#2196F3",
-                            color: "#fff",
-                            fontWeight: 600,
-                            fontSize: 15,
-                            border: "none",
-                            whiteSpace: "nowrap",
-                            letterSpacing: 0.1,
-                          }}
-                        >
-                          {n.id}
-                        </span>
-                      ))}
-                    </div>
-                    {hoveredNode.neighbors.length > 10 && (
+                {selectedNode &&
+                  selectedNode.neighbors &&
+                  selectedNode.neighbors.length > 0 && (
+                    <div style={{ marginTop: 10, width: "100%" }}>
                       <div
-                        style={{ color: "#aaa", fontSize: 14, marginTop: 6 }}
+                        style={{
+                          color: "#aaa",
+                          fontSize: 15,
+                          fontWeight: 500,
+                          marginBottom: 8,
+                        }}
                       >
-                        and {hoveredNode.neighbors.length - 10} more
+                        Related
                       </div>
-                    )}
-                  </div>
-                )}
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 8,
+                          marginBottom: 8,
+                        }}
+                      >
+                        {selectedNode.neighbors.slice(0, 10).map((n) => (
+                          <span
+                            key={n.id}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              padding: "2px 14px 2px 10px",
+                              borderRadius: 20,
+                              background: "rgba(33, 150, 243, 0.1)",
+                              color: "#fff",
+                              fontWeight: 400,
+                              fontSize: 15,
+                              border: "1px solid #2196f3",
+                              whiteSpace: "nowrap",
+                              letterSpacing: 0.1,
+                            }}
+                          >
+                            {n.id}
+                          </span>
+                        ))}
+                      </div>
+                      {selectedNode.neighbors.length > 10 && (
+                        <div
+                          style={{ color: "#aaa", fontSize: 14, marginTop: 6 }}
+                        >
+                          and {selectedNode.neighbors.length - 10} more
+                        </div>
+                      )}
+                    </div>
+                  )}
               </div>
             ) : (
-              <div style={{ color: "#aaa", fontSize: 16, marginTop: 40 }}>
-                Hover a node to see details
+              <div
+                style={{
+                  color: "#aaa",
+                  fontSize: 18,
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  minHeight: 180,
+                  margin: "auto",
+                }}
+              >
+                Hover a node
+                <br />
+                to see details
               </div>
             )}
           </div>
@@ -554,13 +585,13 @@ const DeveloperUniverse = () => {
               nodeVal="size"
               nodeColor={(node) => {
                 if (
-                  hoveredNode &&
-                  hoveredNode.neighbors.some((n) => n.id === node.id)
+                  selectedNode &&
+                  selectedNode.neighbors.some((n) => n.id === node.id)
                 ) {
                   return "#1085F0"; // Blue for neighbors
                 }
-                if (hoveredNode && node.id === hoveredNode.id) {
-                  return "#C021E9"; // Purple for hovered node
+                if (selectedNode && node.id === selectedNode.id) {
+                  return "#C021E9"; // Purple for selected node
                 }
                 return node.color;
               }}
@@ -574,10 +605,11 @@ const DeveloperUniverse = () => {
                     ? link.target.id
                     : link.target;
                 const isHoveredLink =
-                  hoveredNode &&
-                  (sourceId === hoveredNode.id || targetId === hoveredNode.id);
+                  selectedNode &&
+                  (sourceId === selectedNode.id ||
+                    targetId === selectedNode.id);
                 return isHoveredLink
-                  ? "#1085F0" // Blue for hovered links
+                  ? "#1085F0" // Blue for selected links
                   : "rgba(255,255,255,0.2)";
               }}
               linkWidth={(link) => {
@@ -590,11 +622,13 @@ const DeveloperUniverse = () => {
                     ? link.target.id
                     : link.target;
                 const isHoveredLink =
-                  hoveredNode &&
-                  (sourceId === hoveredNode.id || targetId === hoveredNode.id);
+                  selectedNode &&
+                  (sourceId === selectedNode.id ||
+                    targetId === selectedNode.id);
                 return isHoveredLink ? 2 : 1;
               }}
               onNodeHover={handleNodeHover}
+              onNodeClick={handleNodeClick}
               backgroundColor="transparent"
               height={isFullscreen ? "100vh" : 550}
               d3Force="charge"
@@ -618,7 +652,7 @@ const DeveloperUniverse = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: 24,
+            marginTop: 50,
             marginBottom: 16,
             width: "100%",
           }}

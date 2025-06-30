@@ -14,6 +14,7 @@ import GameOwnerCarousel from "./components/GameOwnerCarousel";
 import ChartHeading from "./components/ChartHeading";
 import DeveloperUniverse from "./components/DeveloperUniverse";
 import BackgroundCarousels from "./components/BackgroundCarousels";
+import SteamTimeMachine from "./components/SteamTimeMachine";
 
 const App = () => {
   const [data, setData] = useState({
@@ -152,14 +153,17 @@ const App = () => {
                   <ReviewsOwnersScatterChart data={data.h3ScatterData} />
                 </div> */}
                 <div className="chart-section-wrapper">
+                  <SteamTimeMachine />
+                </div>
+                <div className="chart-section-wrapper">
                   <GenrePriceDominanceChart data={data.h4Data} />
                 </div>
-                <div className="chart-section-wrapper">
+                {/* <div className="chart-section-wrapper">
                   <FreeVsPaidChart data={data.h5Data} />
-                </div>
-                <div className="chart-section-wrapper">
+                </div> */}
+                {/* <div className="chart-section-wrapper">
                   <Q4ReleaseImpactChart data={data.h6Data} />
-                </div>
+                </div> */}
                 <div className="chart-section-wrapper">
                   <ReviewPriceChart data={data.h7Data} />
                 </div>

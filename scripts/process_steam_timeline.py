@@ -1,70 +1,111 @@
-import pandas as pd
+import csv
 import json
-import os
+import ast
+from datetime import datetime
+from collections import defaultdict
 
-def process_steam_timeline(input_path, output_path):
-    print(f"Reading data from {input_path}...")
-    
-    # Read the dataset
-    df = pd.read_csv(input_path, usecols=['release_date', 'genres'])
-    
-    # Convert release_date to datetime objects
-    df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
-    df.dropna(subset=['release_date'], inplace=True)
-    
-    # Extract year from release_date
-    df['year'] = df['release_date'].dt.year
+INPUT_CSV = 'public/data.csv'
+OUTPUT_JSON = 'public/processed_data/steam_timeline.json'
 
-    print("Processing Steam timeline data...")
 
-    # Initialize a dictionary to hold the yearly genre counts
-    yearly_genre_counts = {}
+def parse_owners(owners_str):
+    # Format: '10000000 - 20000000'
+    try:
+        parts = owners_str.replace(',', '').split('-')
+        if len(parts) == 2:
+            low = int(parts[0].strip())
+            high = int(parts[1].strip())
+            return int((low + high) / 2)
+        return int(parts[0].strip())
+    except Exception:
+        return None
 
-    # Iterate over each game in the dataframe
-    for _, row in df.iterrows():
-        year = row['year']
-        try:
-            genres = json.loads(row['genres'].replace("'", '"')) if pd.notna(row['genres']) else []
-        except (json.JSONDecodeError, TypeError):
-            continue
+def parse_list_field(field):
+    try:
+        val = ast.literal_eval(field)
+        if isinstance(val, list):
+            return val
+        return []
+    except Exception:
+        return []
 
-        if year not in yearly_genre_counts:
-            yearly_genre_counts[year] = {}
+def parse_screenshots(field):
+    shots = parse_list_field(field)
+    return shots[:3] if shots else []
 
-        for genre in genres:
-            if genre not in yearly_genre_counts[year]:
-                yearly_genre_counts[year][genre] = 0
-            yearly_genre_counts[year][genre] += 1
+def parse_date(date_str):
+    try:
+        return datetime.strptime(date_str, '%Y-%m-%d')
+    except Exception:
+        return None
 
-    # Format the data for the timeline chart
-    timeline_data = []
-    all_genres = sorted(list(set(genre for year_data in yearly_genre_counts.values() for genre in year_data.keys())))
-    
-    for year in sorted(yearly_genre_counts.keys()):
-        year_data = {'year': int(year)}
-        for genre in all_genres:
-            year_data[genre] = yearly_genre_counts[year].get(genre, 0)
-        timeline_data.append(year_data)
-
-    output = {
-        'timeline': timeline_data,
-        'genres': all_genres
-    }
-
-    print(f"Writing output to {output_path}...")
-    # Write the JSON output
-    with open(output_path, 'w') as f:
-        json.dump(output, f, indent=4)
-
-    print("Processing complete.")
+def main():
+    print("[DEBUG] Starting process_steam_timeline.py (downsampled)")
+    games_by_year = defaultdict(list)
+    total = 0
+    skipped = 0
+    skipped_date = 0
+    skipped_parse = 0
+    with open(INPUT_CSV, encoding='utf-8') as f:
+        print("[DEBUG] Opened CSV file")
+        reader = csv.DictReader(f)
+        first_row = next(reader, None)
+        if first_row:
+            print(f"[DEBUG] First row keys: {list(first_row.keys())}")
+            print(f"[DEBUG] First row values: {list(first_row.values())}")
+            # Rewind to process all rows
+            f.seek(0)
+            reader = csv.DictReader(f)
+        else:
+            print("[DEBUG] No rows in CSV file!")
+        for row in reader:
+            total += 1
+            release_date = parse_date(row['release_date'])
+            if not release_date:
+                skipped += 1
+                skipped_date += 1
+                continue
+            try:
+                entry = {
+                    'appid': row['appid'],
+                    'name': row['name'],
+                    'release_date': row['release_date'],
+                    'release_year': release_date.year,
+                    'positive': int(row['positive']) if row['positive'].isdigit() else 0,
+                    'estimated_owners': parse_owners(row['estimated_owners']),
+                    'genre': parse_list_field(row['genres'])[0] if row['genres'] else None,
+                    'genres': parse_list_field(row['genres']),
+                    'detailed_description': row['detailed_description'],
+                    'short_description': row['short_description'],
+                    'header_image': row['header_image'],
+                    'screenshots': parse_screenshots(row['screenshots']),
+                    'developers': parse_list_field(row['developers']),
+                    'publishers': parse_list_field(row['publishers']),
+                    'avg_review_score': float(row['pct_pos_total']) if row.get('pct_pos_total') not in (None, '', 'null') else None,
+                }
+                games_by_year[release_date.year].append(entry)
+            except Exception as e:
+                skipped += 1
+                skipped_parse += 1
+                print(f"[SKIP] Parse error on row {total}: {e}")
+                continue
+    # Downsample: keep only top 40 games per year by positive ratings
+    timeline = []
+    for year, games in games_by_year.items():
+        top_games = sorted(games, key=lambda x: x['positive'] if x['positive'] is not None else 0, reverse=True)[:40]
+        timeline.extend(top_games)
+    # Sort by release_date
+    timeline.sort(key=lambda x: x['release_date'])
+    print(f"Total rows: {total}")
+    print(f"Rows skipped: {skipped}")
+    print(f"  - Skipped due to invalid/missing date: {skipped_date}")
+    print(f"  - Skipped due to parse error: {skipped_parse}")
+    print(f"Rows included (after downsampling): {len(timeline)}")
+    if timeline:
+        print("Sample entry:")
+        print(json.dumps(timeline[0], indent=2))
+    with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
+        json.dump(timeline, f, ensure_ascii=False, indent=2)
 
 if __name__ == '__main__':
-    # Get the directory of the script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    # Define the relative paths for input and output
-    input_csv_path = os.path.join(script_dir, '..', 'public', 'data.csv')
-    output_json_path = os.path.join(script_dir, '..', 'public', 'processed_data', 'steam_timeline.json')
-    
-    # Run the processing function
-    process_steam_timeline(input_csv_path, output_json_path) 
+    main() 
