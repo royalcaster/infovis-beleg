@@ -6,12 +6,51 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Sector,
 } from "recharts";
 import ChartHeading from "./ChartHeading";
 
 const COLORS = ["#0088FE", "#00C49F"];
 
-const FreeVsPaidChart = ({ data }) => {
+// Custom label renderer to position labels outside the pie and ensure visibility
+const renderCustomLabel = ({
+  cx,
+  cy,
+  midAngle,
+  outerRadius,
+  percent,
+  name,
+}) => {
+  const RADIAN = Math.PI / 180;
+  // Position label 2px outside the outer radius (very close)
+  const radius = outerRadius + 2;
+  let x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  const isRight = x > cx;
+  // Nudge x for better fit
+  x = isRight ? x + 10 : x - 10;
+  // Always split into two lines: name, then percent
+  const percentText = `${(percent * 100).toFixed(0)}%`;
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="#b8f7d4"
+      textAnchor={isRight ? "start" : "end"}
+      dominantBaseline="central"
+      fontSize={13}
+      fontWeight={600}
+      style={{ textShadow: "0 2px 8px #000a" }}
+    >
+      {name}
+      <tspan x={x} dy={16}>
+        {percentText}
+      </tspan>
+    </text>
+  );
+};
+
+const FreeVsPaidChart = ({ data, align = "left" }) => {
   // Step C1: Validate data shape
   const isValid =
     Array.isArray(data) &&
@@ -30,22 +69,24 @@ const FreeVsPaidChart = ({ data }) => {
   }
 
   return (
-    <div>
-      <ChartHeading>Free vs Paid Games</ChartHeading>
-      <p
-        style={{
-          color: "#ccc",
-          fontSize: "1.08rem",
-          maxWidth: 700,
-          margin: "0 0 24px 0",
-        }}
-      >
-        This chart compares the number of free-to-play games versus paid games
-        on Steam. Each slice of the pie represents the proportion of games in
-        each category, helping you quickly see how common free games are
-        compared to paid ones.
-      </p>
-      <ResponsiveContainer width="100%" height={400}>
+    <div style={{ minWidth: 600 }}>
+      <div className={`chart-heading-block ${align}`}>
+        <ChartHeading align={align}>Free vs Paid Games</ChartHeading>
+        <p
+          style={{
+            color: "#ccc",
+            fontSize: "1.08rem",
+            maxWidth: 700,
+            margin: "0 0 24px 0",
+          }}
+        >
+          This chart compares the number of free-to-play games versus paid games
+          on Steam. Each slice of the pie represents the proportion of games in
+          each category, helping you quickly see how common free games are
+          compared to paid ones.
+        </p>
+      </div>
+      <ResponsiveContainer width="99%" height={400}>
         <PieChart>
           <Pie
             data={data}
@@ -55,15 +96,16 @@ const FreeVsPaidChart = ({ data }) => {
             cy="50%"
             outerRadius={150}
             fill="#8884d8"
-            label={({ name, percent }) =>
-              `${name} ${(percent * 100).toFixed(0)}%`
-            }
+            label={renderCustomLabel}
             labelLine={false}
+            // Remove any stroke/border
+            stroke="none"
           >
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
+                stroke="none"
               />
             ))}
           </Pie>

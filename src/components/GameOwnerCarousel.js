@@ -33,7 +33,8 @@ const ITEM_WIDTH = 120; // Must match CSS
 const ITEM_GAP = 30; // Must match CSS
 const LABEL_WIDTH = 40; // px, increased space for the label and gap
 
-const GameOwnerCarousel = ({ data }) => {
+const GameOwnerCarousel = (props) => {
+  const { data, align = "left" } = props;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [helperY, setHelperY] = useState([0, 0, 0]);
   const animRef = useRef();
@@ -180,20 +181,22 @@ const GameOwnerCarousel = ({ data }) => {
 
   return (
     <div>
-      <ChartHeading>Player counts</ChartHeading>
-      <p
-        style={{
-          color: "#ccc",
-          fontSize: "1.08rem",
-          maxWidth: 700,
-          margin: "0 0 24px 0",
-        }}
-      >
-        This chart lets you compare the estimated number of players (owners) for
-        different games on Steam. Each bar represents a game, with its length
-        showing the relative player count. Use the arrows to scroll through more
-        games and see how popular different titles are.
-      </p>
+      <div className={`chart-heading-block ${align}`}>
+        <ChartHeading align={align}>Player counts</ChartHeading>
+        <p
+          style={{
+            color: "#ccc",
+            fontSize: "1.08rem",
+            maxWidth: 700,
+            margin: "0 0 24px 0",
+          }}
+        >
+          This chart lets you compare the estimated number of players (owners)
+          for different games on Steam. Each bar represents a game, with its
+          length showing the relative player count. Use the arrows to scroll
+          through more games and see how popular different titles are.
+        </p>
+      </div>
       <div className="carousel-container">
         <button
           className="nav-button prev"

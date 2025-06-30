@@ -179,6 +179,32 @@ const App = () => {
     return <div className="error">{error}</div>;
   }
 
+  // Chart sections to render, in order
+  const chartSections = [
+    {
+      component: GameOwnerCarousel,
+      props: { data: data.carouselData },
+      key: "carousel",
+    },
+    { component: DeveloperUniverse, props: {}, key: "devUniverse" },
+    {
+      component: ReviewPercentageOverTimeChart,
+      props: { data: data.h1Data },
+      key: "reviewOverTime",
+    },
+    {
+      component: GenrePriceDominanceChart,
+      props: { data: data.h4Data },
+      key: "genrePrice",
+    },
+    {
+      component: ReviewPriceChart,
+      props: { data: data.h7Data },
+      key: "reviewPrice",
+    },
+    // Add more chart components here as needed
+  ];
+
   return (
     <div style={{ position: "relative", zIndex: 0 }}>
       <LoadingSpinner visible={showSpinner} />
@@ -190,43 +216,23 @@ const App = () => {
           <div className="App-container">
             <div className="content-container">
               <div className="chart-grid">
-                <div className="chart-section-wrapper">
-                  {generalInfo && <DataOverview info={generalInfo} />}
-                </div>
-                <div className="chart-section-wrapper">
-                  <GameOwnerCarousel data={data.carouselData} />
-                </div>
-                <div className="chart-section-wrapper">
-                  <DeveloperUniverse />
-                  <div style={{ height: 150 }}></div>
-                </div>
-                <div className="chart-section-wrapper">
-                  <ReviewPercentageOverTimeChart data={data.h1Data} />
-                </div>
-                {/* <div className="chart-section-wrapper">
-                  <PlatformsVsOwnersChart data={data.h2Data} />
-                </div>
-                <div className="chart-section-wrapper">
-                  <ReviewsOwnersBinnedChart data={data.h3BinnedData} />
-                </div>
-                <div className="chart-section-wrapper">
-                  <ReviewsOwnersScatterChart data={data.h3ScatterData} />
-                </div> */}
-                <div className="chart-section-wrapper">
-                  <SteamTimeMachine />
-                </div>
-                <div className="chart-section-wrapper">
-                  <GenrePriceDominanceChart data={data.h4Data} />
-                </div>
-                {/* <div className="chart-section-wrapper">
-                  <FreeVsPaidChart data={data.h5Data} />
-                </div> */}
-                {/* <div className="chart-section-wrapper">
-                  <Q4ReleaseImpactChart data={data.h6Data} />
-                </div> */}
-                <div className="chart-section-wrapper">
-                  <ReviewPriceChart data={data.h7Data} />
-                </div>
+                {generalInfo && (
+                  <div className="chart-section-wrapper">
+                    <DataOverview info={generalInfo} />
+                  </div>
+                )}
+                {chartSections.map((section, idx) => {
+                  const AlignComponent = section.component;
+                  const align = idx % 2 === 0 ? "left" : "right";
+                  return (
+                    <div
+                      className={`chart-section-wrapper ${align}`}
+                      key={section.key}
+                    >
+                      <AlignComponent {...section.props} align={align} />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

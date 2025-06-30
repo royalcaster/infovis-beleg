@@ -1,6 +1,6 @@
 import React from "react";
 
-const ChartHeading = ({ children }) => (
+const ChartHeading = ({ children, align = "left" }) => (
   <h2
     style={{
       fontSize: "2rem",
@@ -10,7 +10,7 @@ const ChartHeading = ({ children }) => (
       marginTop: 0,
       letterSpacing: "-1px",
       textShadow: "0 2px 8px rgba(0,0,0,0.15)",
-      textAlign: "left",
+      textAlign: align,
     }}
   >
     {children}

@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import ChartHeading from "./ChartHeading";
 
-const Q4ReleaseImpactChart = ({ data }) => {
+const Q4ReleaseImpactChart = ({ data, align = "left" }) => {
   // Step C1: Validate data shape
   const isValid =
     Array.isArray(data) &&
@@ -49,21 +49,25 @@ const Q4ReleaseImpactChart = ({ data }) => {
 
   return (
     <div style={{ width: "100%", height: 400 }}>
-      <ChartHeading>Impact of Q4 Release on Game Success</ChartHeading>
-      <p
-        style={{
-          color: "#ccc",
-          fontSize: "1.08rem",
-          maxWidth: 700,
-          margin: "0 0 24px 0",
-        }}
-      >
-        This chart explores whether releasing a game in the fourth quarter (Q4)
-        of the year affects its success. It compares average owners, average
-        reviews, and the number of games released in each period, helping you
-        spot if Q4 releases tend to perform better or worse than those in other
-        quarters.
-      </p>
+      <div className={`chart-heading-block ${align}`}>
+        <ChartHeading align={align}>
+          Impact of Q4 Release on Game Success
+        </ChartHeading>
+        <p
+          style={{
+            color: "#ccc",
+            fontSize: "1.08rem",
+            maxWidth: 700,
+            margin: "0 0 24px 0",
+          }}
+        >
+          This chart explores whether releasing a game in the fourth quarter
+          (Q4) of the year affects its success. It compares average owners,
+          average reviews, and the number of games released in each period,
+          helping you spot if Q4 releases tend to perform better or worse than
+          those in other quarters.
+        </p>
+      </div>
       <ResponsiveContainer>
         <BarChart
           data={processedData}

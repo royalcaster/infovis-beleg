@@ -24,7 +24,7 @@ const formatNumber = (num) => {
   return numericValue.toLocaleString();
 };
 
-const PlatformOwnersChart = ({ data }) => {
+const PlatformOwnersChart = ({ data, align = "left" }) => {
   if (!data || data.length === 0) {
     return (
       <section className="chart-section">
@@ -36,20 +36,24 @@ const PlatformOwnersChart = ({ data }) => {
 
   return (
     <section className="chart-section">
-      <ChartHeading>Average Estimated Owners by Platform Count</ChartHeading>
-      <p
-        style={{
-          color: "#ccc",
-          fontSize: "1.08rem",
-          maxWidth: 700,
-          margin: "0 0 24px 0",
-        }}
-      >
-        This chart shows how the average number of owners changes depending on
-        how many platforms a game is available on. Each bar represents games
-        with a specific number of platform releases, helping you see if
-        multi-platform games tend to reach more players.
-      </p>
+      <div className={`chart-heading-block ${align}`}>
+        <ChartHeading align={align}>
+          Average Estimated Owners by Platform Count
+        </ChartHeading>
+        <p
+          style={{
+            color: "#ccc",
+            fontSize: "1.08rem",
+            maxWidth: 700,
+            margin: "0 0 24px 0",
+          }}
+        >
+          This chart shows how the average number of owners changes depending on
+          how many platforms a game is available on. Each bar represents games
+          with a specific number of platform releases, helping you see if
+          multi-platform games tend to reach more players.
+        </p>
+      </div>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={data}

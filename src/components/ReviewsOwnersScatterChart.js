@@ -24,7 +24,7 @@ const formatNumber = (num) => {
   return numericValue.toLocaleString();
 };
 
-const ReviewsOwnersScatterChart = ({ data }) => {
+const ReviewsOwnersScatterChart = ({ data, align = "left" }) => {
   // Step C1: Validate data shape
   const isValid =
     Array.isArray(data) &&
@@ -131,23 +131,25 @@ const ReviewsOwnersScatterChart = ({ data }) => {
 
   return (
     <section className="chart-section">
-      <ChartHeading>
-        Relationship Between Positive Reviews and Estimated Owners
-      </ChartHeading>
-      <p
-        style={{
-          color: "#ccc",
-          fontSize: "1.08rem",
-          maxWidth: 700,
-          margin: "0 0 24px 0",
-        }}
-      >
-        This scatter plot shows the relationship between the number of positive
-        reviews and the estimated number of owners for each game. Each point
-        represents a game—games further to the right have more positive reviews,
-        and those higher up have more owners. Use the filters to focus on
-        specific ranges and spot trends or outliers.
-      </p>
+      <div className={`chart-heading-block ${align}`}>
+        <ChartHeading align={align}>
+          Relationship Between Positive Reviews and Estimated Owners
+        </ChartHeading>
+        <p
+          style={{
+            color: "#ccc",
+            fontSize: "1.08rem",
+            maxWidth: 700,
+            margin: "0 0 24px 0",
+          }}
+        >
+          This scatter plot shows the relationship between the number of
+          positive reviews and the estimated number of owners for each game.
+          Each point represents a game—games further to the right have more
+          positive reviews, and those higher up have more owners. Use the
+          filters to focus on specific ranges and spot trends or outliers.
+        </p>
+      </div>
       {/* Filter Controls */}
       <div
         style={{

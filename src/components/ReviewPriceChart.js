@@ -26,7 +26,7 @@ const formatNumber = (num) => {
   return numericValue.toLocaleString();
 };
 
-const ReviewPriceChart = ({ data }) => {
+const ReviewPriceChart = ({ data, align = "left" }) => {
   // Step C1: Validate data shape
   const isValid =
     Array.isArray(data) &&
@@ -65,21 +65,23 @@ const ReviewPriceChart = ({ data }) => {
 
   return (
     <section className="chart-section">
-      <ChartHeading>Price Impact on Game Reviews</ChartHeading>
-      <p
-        style={{
-          color: "#ccc",
-          fontSize: "1.08rem",
-          maxWidth: 700,
-          margin: "0 0 24px 0",
-        }}
-      >
-        This chart examines how a game's price relates to its review scores.
-        Each point shows the median positive review percentage for games in a
-        given price range, along with the number of games in each range. Look
-        for trends to see if cheaper or more expensive games tend to get better
-        reviews.
-      </p>
+      <div className={`chart-heading-block ${align}`}>
+        <ChartHeading align={align}>Price Impact on Game Reviews</ChartHeading>
+        <p
+          style={{
+            color: "#ccc",
+            fontSize: "1.08rem",
+            maxWidth: 700,
+            margin: "0 0 24px 0",
+          }}
+        >
+          This chart examines how a game's price relates to its review scores.
+          Each point shows the median positive review percentage for games in a
+          given price range, along with the number of games in each range. Look
+          for trends to see if cheaper or more expensive games tend to get
+          better reviews.
+        </p>
+      </div>
       <ResponsiveContainer width="100%" height={500}>
         <LineChart
           data={processedData}

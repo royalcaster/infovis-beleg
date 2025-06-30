@@ -6,7 +6,8 @@ import { getReviewColor } from "../colors";
 
 const DATA_URL = process.env.PUBLIC_URL + "/processed_data/steam_timeline.json";
 
-const SteamTimeMachine = () => {
+const SteamTimeMachine = (props) => {
+  const { align = "left" } = props;
   const [data, setData] = useState([]);
   const [genre, setGenre] = useState("All");
   const [modalGame, setModalGame] = useState(null);
@@ -387,34 +388,35 @@ const SteamTimeMachine = () => {
 
   return (
     <div style={{ width: "100%", position: "relative" }}>
-      <h2
-        style={{
-          fontSize: "2rem",
-          fontWeight: 800,
-          color: "#fff",
-          marginBottom: "1.2rem",
-          marginTop: 0,
-          letterSpacing: "-1px",
-          textShadow: "0 2px 8px rgba(0,0,0,0.15)",
-          textAlign: "left",
-        }}
-      >
-        Steam Time Machine
-      </h2>
-      <p
-        style={{
-          color: "#ccc",
-          fontSize: "1.08rem",
-          maxWidth: 700,
-          margin: "0 0 24px 0",
-        }}
-      >
-        This interactive timeline lets you explore the most popular Steam games
-        released each year. Each point is a game, positioned by release year and
-        number of positive ratings. Use the genre filter, zoom, and tooltips to
-        discover trends, breakout hits, and how the Steam landscape has evolved
-        over time.
-      </p>
+      <div className={`chart-heading-block ${align}`}>
+        <h2
+          style={{
+            fontSize: "2rem",
+            fontWeight: 800,
+            color: "#fff",
+            marginBottom: "1.2rem",
+            marginTop: 0,
+            letterSpacing: "-1px",
+            textShadow: "0 2px 8px rgba(0,0,0,0.15)",
+          }}
+        >
+          Steam Time Machine
+        </h2>
+        <p
+          style={{
+            color: "#ccc",
+            fontSize: "1.08rem",
+            maxWidth: 700,
+            margin: "0 0 24px 0",
+          }}
+        >
+          This interactive timeline lets you explore the most popular Steam
+          games released each year. Each point is a game, positioned by release
+          year and number of positive ratings. Use the genre filter, zoom, and
+          tooltips to discover trends, breakout hits, and how the Steam
+          landscape has evolved over time.
+        </p>
+      </div>
       <div style={{ textAlign: "left", marginBottom: 18 }}>
         <select
           value={genre}

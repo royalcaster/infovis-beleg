@@ -25,7 +25,7 @@ function clamp(val, min, max) {
   return Math.max(min, Math.min(max, val));
 }
 
-const ReviewPercentageOverTimeChart = ({ data }) => {
+const ReviewPercentageOverTimeChart = ({ data, align = "left" }) => {
   // Step C1: Validate data shape
   const isValid =
     Array.isArray(data) &&
@@ -69,20 +69,22 @@ const ReviewPercentageOverTimeChart = ({ data }) => {
 
   return (
     <div>
-      <ChartHeading>Positive reviews over time</ChartHeading>
-      <p
-        style={{
-          color: "#ccc",
-          fontSize: "1.08rem",
-          maxWidth: 700,
-          margin: "0 0 24px 0",
-        }}
-      >
-        This chart shows how the average percentage of positive reviews for
-        games on Steam has changed over time. Each point represents the average
-        review score for games released in a given year, helping you spot trends
-        in player satisfaction across different periods.
-      </p>
+      <div className={`chart-heading-block ${align}`}>
+        <ChartHeading align={align}>Positive reviews over time</ChartHeading>
+        <p
+          style={{
+            color: "#ccc",
+            fontSize: "1.08rem",
+            maxWidth: 700,
+            margin: "0 0 24px 0",
+          }}
+        >
+          This chart shows how the average percentage of positive reviews for
+          games on Steam has changed over time. Each point represents the
+          average review score for games released in a given year, helping you
+          spot trends in player satisfaction across different periods.
+        </p>
+      </div>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
           data={filteredData}

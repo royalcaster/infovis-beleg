@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import ChartHeading from "./ChartHeading";
 import { colors } from "../colors";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from "recharts";
 
 const formatNumber = (num) => {
   if (num === null || num === undefined || num === "N/A") return "N/A";
@@ -23,6 +31,8 @@ const metricTooltips = {
     "Standard deviation: how much the values typically differ from the mean (spread of the data).",
 };
 
+const pieColors = [colors.accent3, colors.accent1];
+
 function getRelativePosition(value, min, max) {
   if (max === min) return 0.5;
   return (value - min) / (max - min);
@@ -36,6 +46,15 @@ const DataOverview = ({ info }) => {
   if (!info) return null;
   const { total_games_analyzed, numeric_column_stats, free_vs_paid_counts } =
     info;
+
+  // Pie chart data
+  const pieData = free_vs_paid_counts
+    ? free_vs_paid_counts.map((item) => ({
+        name: item.type === "Free" ? "Free Games" : "Paid Games",
+        value: item.count,
+        color: item.type === "Free" ? colors.accent3 : colors.accent1,
+      }))
+    : [];
 
   // Sorting logic
   const getSortValue = (stat, col) => {
@@ -83,88 +102,92 @@ const DataOverview = ({ info }) => {
   return (
     <section
       style={{
-        background: colors.background2,
-        borderRadius: 18,
-        margin: "32px 0 40px 0",
-        padding: "36px 36px 28px 36px",
-        boxShadow: "0 4px 32px 0 #0005",
-        maxWidth: 1200,
+        maxWidth: 1400,
         width: "100%",
         marginLeft: "auto",
         marginRight: "auto",
         fontFamily: "Roboto, Arial, Helvetica, sans-serif",
+        marginBottom: -200,
       }}
     >
-      <ChartHeading>Overview & Statistics</ChartHeading>
-      <p
-        style={{
-          color: colors.font2,
-          fontSize: "1.13rem",
-          marginBottom: 32,
-          maxWidth: 900,
-          fontFamily: "Roboto",
-          fontWeight: 400,
-        }}
-      >
-        This section summarizes the main statistics of the Steam games dataset
-        used in this app. It provides an overview of the data's size, key
-        metrics, and distributions, helping you understand the scope and
-        characteristics of the analyzed games.
-      </p>
-      <div
-        style={{ display: "flex", flexWrap: "wrap", gap: 32, marginBottom: 32 }}
-      >
-        <div style={{ minWidth: 220, flex: 1 }}>
-          <div
-            style={{
-              color: colors.accent7,
-              fontSize: 32,
-              fontWeight: 900,
-              marginBottom: 4,
-              fontFamily: "Roboto",
-            }}
-          >
-            {formatNumber(total_games_analyzed)}
-          </div>
-          <div
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        {/* Left-aligned heading and paragraph */}
+        <div style={{ flex: 1, textAlign: "left" }}>
+          <ChartHeading>Overview & Statistics</ChartHeading>
+          <p
             style={{
               color: colors.font2,
-              fontSize: 17,
-              fontWeight: 600,
-              fontFamily: "Roboto, Arial, Helvetica, sans-serif",
+              fontSize: "1.13rem",
+              marginBottom: 32,
+              maxWidth: 900,
+              fontFamily: "Roboto",
+              fontWeight: 300,
+              textAlign: "left",
             }}
           >
-            Total Games
-          </div>
+            This section summarizes the main statistics of the Steam games
+            dataset used in this app. It provides an overview of the data's
+            size, key metrics, and distributions, helping you understand the
+            scope and characteristics of the analyzed games.
+          </p>
         </div>
-        {free_vs_paid_counts &&
-          free_vs_paid_counts.map((item) => (
-            <div key={item.type} style={{ minWidth: 180, flex: 1 }}>
-              <div
-                style={{
-                  color: item.type === "Free" ? colors.accent3 : colors.accent1,
-                  fontSize: 28,
-                  fontWeight: 700,
-                  marginBottom: 4,
-                  fontFamily: "Roboto, Arial, Helvetica, sans-serif",
-                }}
+        {/* Right-aligned heading and paragraph (for demonstration, duplicate with right alignment) */}
+
+        {/* Pie chart for Free vs Paid Games */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: 40,
+            flex: 1,
+          }}
+        >
+          <ResponsiveContainer width={340} height={220}>
+            <PieChart>
+              <Pie
+                data={pieData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={90}
+                label={({ name, value }) => `${name}: ${formatNumber(value)}`}
+                labelLine={false}
+                isAnimationActive={false}
               >
-                {formatNumber(item.count)}
-              </div>
-              <div
-                style={{
+                {pieData.map((entry, idx) => (
+                  <Cell key={`cell-${idx}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip
+                formatter={(value, name) => [formatNumber(value), name]}
+                contentStyle={{
+                  backgroundColor: "#23263a",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 8,
+                  fontFamily: "Roboto",
+                }}
+              />
+              <Legend
+                verticalAlign="bottom"
+                align="center"
+                iconType="circle"
+                wrapperStyle={{
                   color: colors.font2,
                   fontSize: 16,
-                  fontWeight: 500,
-                  fontFamily: "Roboto, Arial, Helvetica, sans-serif",
+                  fontFamily: "Roboto",
+                  marginTop: 12,
                 }}
-              >
-                {item.type} Games
-              </div>
-            </div>
-          ))}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </div>
-      <div style={{ overflowX: "auto" }}>
+      <div style={{ height: 50 }}></div>
+      <div>
         <table
           style={{
             width: "100%",
@@ -180,6 +203,7 @@ const DataOverview = ({ info }) => {
                 fontSize: 16,
                 fontWeight: 700,
                 background: colors.background3,
+                height: 55,
               }}
             >
               {columns.map((col) => (
@@ -242,19 +266,22 @@ const DataOverview = ({ info }) => {
             </tr>
           </thead>
           <tbody>
-            {sortedStats.map((stat) => (
+            {sortedStats.map((stat, idx) => (
               <tr
                 key={stat.column_name}
                 style={{
-                  background: colors.background1,
-                  borderBottom: `1px solid ${colors.background3}`,
+                  background:
+                    idx % 2 === 0
+                      ? "rgba(255,255,255,0)"
+                      : "rgba(255,255,255,0.05)",
+                  height: 55,
                 }}
               >
                 <td
                   style={{
                     padding: "10px 16px",
                     color: colors.font2,
-                    fontWeight: 600,
+                    fontWeight: 400,
                     textAlign: "left",
                     fontFamily: "Roboto, Arial, Helvetica, sans-serif",
                   }}
@@ -281,132 +308,25 @@ const DataOverview = ({ info }) => {
                 >
                   {formatNumber(stat.max)}
                 </td>
-                {/* Mean with mini bar */}
                 <td
                   style={{
                     padding: "10px 16px",
                     color: colors.font2,
                     textAlign: "right",
-                    position: "relative",
                     fontFamily: "Roboto, Arial, Helvetica, sans-serif",
                   }}
                 >
-                  <div
-                    style={{
-                      position: "relative",
-                      height: 24,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <span
-                      style={{
-                        position: "relative",
-                        zIndex: 2,
-                        marginRight: 18,
-                      }}
-                    >
-                      {formatNumber(stat.average)}
-                    </span>
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: 0,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        height: 8,
-                        width: "100%",
-                        background: "rgba(33,150,243,0.10)",
-                        borderRadius: 4,
-                        zIndex: 1,
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: `${
-                          getRelativePosition(
-                            stat.average,
-                            stat.min,
-                            stat.max
-                          ) * 100
-                        }%`,
-                        top: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: 16,
-                        height: 16,
-                        background: colors.accent7,
-                        borderRadius: "50%",
-                        boxShadow: "0 1px 6px #2196f355",
-                        border: `2px solid ${colors.background2}`,
-                        zIndex: 3,
-                      }}
-                      title="Mean position"
-                    />
-                  </div>
+                  {formatNumber(stat.average)}
                 </td>
-                {/* Median with mini bar */}
                 <td
                   style={{
                     padding: "10px 16px",
                     color: colors.font2,
                     textAlign: "right",
-                    position: "relative",
                     fontFamily: "Roboto, Arial, Helvetica, sans-serif",
                   }}
                 >
-                  <div
-                    style={{
-                      position: "relative",
-                      height: 24,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <span
-                      style={{
-                        position: "relative",
-                        zIndex: 2,
-                        marginRight: 18,
-                      }}
-                    >
-                      {formatNumber(stat.median)}
-                    </span>
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: 0,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        height: 8,
-                        width: "100%",
-                        background: "rgba(33,150,243,0.10)",
-                        borderRadius: 4,
-                        zIndex: 1,
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: `${
-                          getRelativePosition(stat.median, stat.min, stat.max) *
-                          100
-                        }%`,
-                        top: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: 16,
-                        height: 16,
-                        background: colors.accent3,
-                        borderRadius: "50%",
-                        boxShadow: "0 1px 6px #00c49f55",
-                        border: `2px solid ${colors.background2}`,
-                        zIndex: 3,
-                      }}
-                      title="Median position"
-                    />
-                  </div>
+                  {formatNumber(stat.median)}
                 </td>
                 <td
                   style={{

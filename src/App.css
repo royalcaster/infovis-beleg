@@ -100,8 +100,8 @@ body {
 .chart-section {
   padding: 30px 0 30px 0;
   border-radius: 8px;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 0;
+  margin-bottom: 0;
   text-align: left;
   padding-left: 0;
   margin-left: 0;
@@ -336,15 +336,14 @@ body {
 }
 
 .chart-section-wrapper {
-  margin-bottom: 10rem;
+  margin-bottom: 8rem;
   text-align: left;
   padding-left: 0;
   margin-left: 0;
 }
 
 .chart-section-wrapper:first-child {
-  margin-top: 10rem;
-  margin-bottom: 30rem;
+  margin-top: 5rem;
 }
 
 .chart-section-wrapper:last-child {
@@ -354,4 +353,45 @@ body {
 h2,
 .carousel-heading {
   text-align: left !important;
+}
+
+.chart-section-wrapper.left,
+.chart-section-wrapper.right {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  max-width: 100%;
+}
+
+.chart-heading-block {
+  max-width: 700px;
+  margin-bottom: 24px;
+}
+.chart-heading-block.left {
+  text-align: left;
+  margin-left: 0;
+  margin-right: auto;
+}
+.chart-heading-block.right {
+  text-align: right;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+@media (max-width: 1100px) {
+  .chart-heading-block.right {
+    padding-left: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .chart-heading-block.right,
+  .chart-heading-block.left {
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 100%;
+  }
 }
