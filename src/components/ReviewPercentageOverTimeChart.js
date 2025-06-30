@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   LineChart,
   Line,
@@ -19,6 +19,11 @@ const formatYAxisTick = (tickValue) => {
   }
   return formatPercentage(tickValue);
 };
+
+// Add this helper for a two-handle slider
+function clamp(val, min, max) {
+  return Math.max(min, Math.min(max, val));
+}
 
 const ReviewPercentageOverTimeChart = ({ data }) => {
   // Step C1: Validate data shape
@@ -44,16 +49,18 @@ const ReviewPercentageOverTimeChart = ({ data }) => {
   const minYear = useMemo(() => Math.min(...years), [years]);
   const maxYear = useMemo(() => Math.max(...years), [years]);
   const [yearRange, setYearRange] = useState([minYear, maxYear]);
+  const [activeHandle, setActiveHandle] = useState(null); // 'start' or 'end' or null
+
+  // Always reset to full range if minYear or maxYear changes
+  useEffect(() => {
+    setYearRange([minYear, maxYear]);
+  }, [minYear, maxYear]);
 
   // Reset filter to full range
   const resetFilter = () => setYearRange([minYear, maxYear]);
 
   // Filter data by year range
-  const filteredData = useMemo(() => {
-    return safeData.filter(
-      (d) => d.release_year >= yearRange[0] && d.release_year <= yearRange[1]
-    );
-  }, [safeData, yearRange]);
+  const filteredData = safeData;
 
   // Step C3: Handle empty or malformed data
   if (!isValid) {
@@ -62,71 +69,20 @@ const ReviewPercentageOverTimeChart = ({ data }) => {
 
   return (
     <div>
-      <ChartHeading>Avg. Positive Review % Over Time</ChartHeading>
-      <div
+      <ChartHeading>Positive reviews over time</ChartHeading>
+      <p
         style={{
-          marginBottom: 20,
-          padding: 12,
-          background: colors.background2,
-          borderRadius: 8,
-          display: "flex",
-          flexDirection: "column",
-          gap: 8,
+          color: "#ccc",
+          fontSize: "1.08rem",
+          maxWidth: 700,
+          margin: "0 0 24px 0",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <span style={{ fontWeight: 600, color: colors.accent7 }}>
-            Year Range Filter
-          </span>
-          <button
-            onClick={resetFilter}
-            style={{
-              background: colors.accent7,
-              color: "#fff",
-              border: "none",
-              borderRadius: 4,
-              padding: "2px 10px",
-              cursor: "pointer",
-              fontSize: 12,
-            }}
-          >
-            Reset
-          </button>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ minWidth: 32, color: colors.font2 }}>{minYear}</span>
-          <input
-            type="range"
-            min={minYear}
-            max={maxYear}
-            value={yearRange[0]}
-            onChange={(e) =>
-              setYearRange([Number(e.target.value), yearRange[1]])
-            }
-            style={{ flex: 1 }}
-          />
-          <span style={{ color: colors.font2 }}>{yearRange[0]}</span>
-          <span style={{ color: colors.font2 }}>-</span>
-          <span style={{ color: colors.font2 }}>{yearRange[1]}</span>
-          <input
-            type="range"
-            min={minYear}
-            max={maxYear}
-            value={yearRange[1]}
-            onChange={(e) =>
-              setYearRange([yearRange[0], Number(e.target.value)])
-            }
-            style={{ flex: 1 }}
-          />
-          <span style={{ minWidth: 32, color: colors.font2 }}>{maxYear}</span>
-        </div>
-      </div>
+        This chart shows how the average percentage of positive reviews for
+        games on Steam has changed over time. Each point represents the average
+        review score for games released in a given year, helping you spot trends
+        in player satisfaction across different periods.
+      </p>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
           data={filteredData}

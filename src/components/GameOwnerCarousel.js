@@ -180,7 +180,20 @@ const GameOwnerCarousel = ({ data }) => {
 
   return (
     <div>
-      <ChartHeading>Compare player counts</ChartHeading>
+      <ChartHeading>Player counts</ChartHeading>
+      <p
+        style={{
+          color: "#ccc",
+          fontSize: "1.08rem",
+          maxWidth: 700,
+          margin: "0 0 24px 0",
+        }}
+      >
+        This chart lets you compare the estimated number of players (owners) for
+        different games on Steam. Each bar represents a game, with its length
+        showing the relative player count. Use the arrows to scroll through more
+        games and see how popular different titles are.
+      </p>
       <div className="carousel-container">
         <button
           className="nav-button prev"

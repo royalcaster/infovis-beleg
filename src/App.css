@@ -1,18 +1,18 @@
 /* Keep your existing App.css styles */
 html {
-  background-color: #0f111e;
+  background-color: transparent;
 }
 
 body {
   font-family: "Roboto", sans-serif;
   margin: 0;
-  background-color: #0f111e;
+  background-color: transparent;
   color: #333;
 }
 
 .App {
   text-align: center;
-  background-color: #0f111e;
+  background-color: transparent;
 }
 
 .App-header {
@@ -89,7 +89,7 @@ body {
   min-height: 100vh;
   position: relative;
   z-index: 1;
-  background-color: #0f111e;
+  background-color: transparent;
 }
 
 .content-container {
@@ -250,7 +250,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: transparent !important;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   z-index: 1000;
@@ -282,11 +282,13 @@ body {
   overflow: hidden;
   transition: max-height 0.3s ease-in-out;
   padding: 0 20px;
+  background: transparent !important;
 }
 
 .filter-content.open {
   max-height: 300px;
   padding: 20px;
+  background: transparent !important;
 }
 
 .filter-section {
