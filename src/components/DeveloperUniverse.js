@@ -6,7 +6,7 @@ import ChartHeading from "./ChartHeading";
 const DeveloperUniverse = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [loading, setLoading] = useState(true);
-  const [showOrphanNodes, setShowOrphanNodes] = useState(true);
+  const [showOrphanNodes, setShowOrphanNodes] = useState(false);
   const [hoveredNode, setHoveredNode] = useState(null);
   const graphRef = React.useRef();
 
@@ -34,19 +34,22 @@ const DeveloperUniverse = () => {
         connectedNodeIds.has(node.id)
       );
     }
+    // Only show nodes with more than 5 games
+    filteredNodes = filteredNodes.filter(node => (node.game_count || 0) > 5);
 
     // Create size and color scales
-    const maxOwners = Math.max(
-      ...filteredNodes.map((n) => n.total_owners || 1)
+    const maxGames = Math.max(
+      ...filteredNodes.map((n) => n.game_count || 1)
     );
-    const minOwners = Math.min(
-      ...filteredNodes.map((n) => n.total_owners || 1)
+    const minGames = Math.min(
+      ...filteredNodes.map((n) => n.game_count || 1)
     );
 
+    // Use a linear scale for game_count, with a wider range for more visual difference
     const sizeScale = d3
-      .scaleLog()
-      .domain([minOwners > 0 ? minOwners : 1, maxOwners])
-      .range([5, 40]);
+      .scaleLinear()
+      .domain([minGames > 0 ? minGames : 1, maxGames])
+      .range([10, 2000]);
 
     // Domain for review scores is roughly 0-100%
     const colorScale = d3
@@ -54,8 +57,8 @@ const DeveloperUniverse = () => {
       .domain([30, 95]); // Use a more focused range for better color distinction
 
     const finalNodes = filteredNodes.map((node) => {
-      // Node size based on total owners
-      const size = sizeScale(node.total_owners || 1);
+      // Node size based on number of games
+      const size = sizeScale(node.game_count || 1);
       // Node color based on average review score
       const color = colorScale(node.avg_review_score || 0);
       return { ...node, size, color };
@@ -88,6 +91,15 @@ const DeveloperUniverse = () => {
     return { nodes: finalNodes, links: finalLinks };
   }, [graphData, showOrphanNodes]);
 
+  useEffect(() => {
+    if (!loading && graphRef.current && processedGraphData.nodes.length > 0) {
+      // Timeout ensures the graph is rendered before fitting
+      setTimeout(() => {
+        graphRef.current.zoomToFit(400);
+      }, 100);
+    }
+  }, [loading, processedGraphData]);
+
   const handleNodeHover = useCallback((node) => {
     setHoveredNode(node);
   }, []);
@@ -115,7 +127,10 @@ const DeveloperUniverse = () => {
 
   return (
     <div>
-      <ChartHeading title="Developer Universe" />
+      <h1 style={{ color: '#fff', fontSize: '2.2rem', marginBottom: 8, marginTop: 0 }}>Developer & Publisher Universe</h1>
+      <p style={{ color: '#ccc', fontSize: '1.08rem', maxWidth: 700, margin: '0 0 24px 0' }}>
+        This network graph visualizes the relationships between game developers and publishers on Steam. Each node represents a developer or publisher, with node size indicating the number of games they are associated with. The color of each node reflects the average review score of their games (from red for lower scores to green for higher scores). Connections (edges) between nodes indicate that the connected developers or publishers have collaborated on at least one game.
+      </p>
       <button onClick={handleResetLayout} style={{ marginBottom: 10 }}>
         Reset Layout
       </button>
@@ -175,7 +190,44 @@ const DeveloperUniverse = () => {
           onNodeHover={handleNodeHover}
           backgroundColor="#0f111e"
           height={600}
+          d3Force="charge"
+          d3ForceStrength={-8000}
+          d3VelocityDecay={0.3}
+          d3AlphaDecay={0.01}
+          d3ForceInit={(forceGraph) => {
+            // Add collision force based on node size, with more padding
+            forceGraph.d3Force('collide', d3.forceCollide().radius(node => node.size / 2 + 800));
+          }}
         />
+      </div>
+      {/* Color legend for review score */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: 24,
+        marginBottom: 16
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', width: 480 }}>
+          <span style={{ color: '#fff', fontSize: 13, marginRight: 8, minWidth: 90 }}>
+            Lower Avg. Review Score
+          </span>
+          <div style={{
+            background: 'linear-gradient(to right, #d7191c, #fdae61, #ffffbf, #a6d96a, #1a9641)',
+            width: 260,
+            height: 16,
+            borderRadius: 8,
+            margin: '0 8px',
+            border: '1px solid #444'
+          }} />
+          <span style={{ color: '#fff', fontSize: 13, marginLeft: 8, minWidth: 90, textAlign: 'right' }}>
+            Higher Avg. Review Score
+          </span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', width: 320, marginTop: 2 }}>
+          <span style={{ color: '#fff', fontSize: 12 }}>30%</span>
+          <span style={{ color: '#fff', fontSize: 12 }}>95%</span>
+        </div>
       </div>
     </div>
   );
