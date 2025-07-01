@@ -192,6 +192,7 @@ const GameOwnerCarousel = (props) => {
             margin: "0 0 24px 0",
           }}
         >
+          <i>How do the estimated player counts (owners) compare across different games on Steam?</i><br/><br/>
           This chart lets you compare the estimated number of players (owners)
           for different games on Steam. Each bar represents a game, with its
           length showing the relative player count. Use the arrows to scroll

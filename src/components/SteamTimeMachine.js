@@ -408,6 +408,7 @@ const SteamTimeMachine = (props) => {
             fontSize: "1.08rem",
             maxWidth: 700,
             margin: "0 0 24px 0",
+            textAlign: "left",
           }}
         >
           This interactive timeline lets you explore the most popular Steam

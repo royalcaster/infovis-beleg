@@ -40,6 +40,7 @@ const PositiveReviewsChart = ({ data }) => {
           margin: "0 0 24px 0",
         }}
       >
+        <i>How is the distribution of positive reviews spread across different categories or segments of games?</i><br/><br/>
         This chart tracks how the average percentage of positive reviews for
         Steam games has changed over the years. Each point represents a year,
         showing whether player satisfaction is rising or falling over time.

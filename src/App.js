@@ -201,6 +201,11 @@ const App = () => {
       component: GenrePriceDominanceChart,
       props: { data: data.h4Data },
       key: "genrePrice",
+    },
+    {
+      component: SteamTimeMachine,
+      props: {},
+      key: "steamTimeMachine",
     }
     // Add more chart components here as needed
   ];

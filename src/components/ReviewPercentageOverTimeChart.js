@@ -80,6 +80,7 @@ const ReviewPercentageOverTimeChart = ({ data, align = "left" }) => {
             textAlign: "left"
           }}
         >
+          <i>How has the average positive review percentage for Steam games evolved throughout the years?</i><br/><br/>
           This chart shows how the average percentage of positive reviews for
           games on Steam has changed over time. Each point represents the
           average review score for games released in a given year, helping you

@@ -76,6 +76,7 @@ const ReviewPriceChart = ({ data, align = "left" }) => {
             textAlign: "left"
           }}
         >
+          <i>How does a game's price influence its median positive review score and the number of games in that price range?</i><br/><br/>
           This chart examines how a game's price relates to its review scores.
           Each point shows the median positive review percentage for games in a
           given price range, along with the number of games in each range. Look

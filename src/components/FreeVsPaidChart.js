@@ -79,6 +79,7 @@ const FreeVsPaidChart = ({ data, align = "left" }) => {
             margin: "0 0 24px 0",
           }}
         >
+          <i>What is the proportion of free-to-play games versus paid games on Steam?</i><br/><br/>
           This chart compares the number of free-to-play games versus paid games
           on Steam. Each slice of the pie represents the proportion of games in
           each category, helping you quickly see how common free games are

@@ -61,6 +61,7 @@ const Q4ReleaseImpactChart = ({ data, align = "left" }) => {
             margin: "0 0 24px 0",
           }}
         >
+          <i>Does releasing games in Q4 (the last quarter of the year) significantly impact their estimated owner counts and review numbers compared to other release periods?</i><br/><br/>
           This chart explores whether releasing a game in the fourth quarter
           (Q4) of the year affects its success. It compares average owners,
           average reviews, and the number of games released in each period,

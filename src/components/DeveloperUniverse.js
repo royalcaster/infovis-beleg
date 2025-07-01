@@ -167,6 +167,7 @@ const DeveloperUniverse = () => {
           margin: "0 0 24px 0",
         }}
       >
+        <i>How are major game developers and publishers connected on Steam, and what are their individual contributions and reputation?</i><br/><br/>
         This interactive network graph maps the relationships between major game
         developers and publishers on Steam. Each node is a company, sized by the
         number of games they've released and colored by their average review
