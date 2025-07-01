@@ -20,72 +20,25 @@ import {
 } from "react-icons/fa";
 import { getReviewColor } from "../colors";
 
-// Node drawing function for ForceGraph2D
-const drawNode = (node, ctx, globalScale) => {
-  const radius = node.size / 2;
-  ctx.beginPath();
-  ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
-  ctx.fillStyle = node.color;
-  ctx.fill();
-
-  // Draw a white border for selected/hovered nodes
-  if (node.isSelected || node.isHovered) {
-    ctx.strokeStyle = "#fff";
-    ctx.lineWidth = 3;
-    ctx.stroke();
-  }
-
-  // Draw text label
-  const label = node.id;
-  const fontSize = Math.max(8, node.size / 5);
-  ctx.font = `${fontSize}px Roboto`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillStyle = "#fff";
-  ctx.fillText(label, node.x, node.y + radius + fontSize / 2 + 2);
-};
-
-// Node pointer area (for interactivity)
-const drawNodePointerArea = (node, color, ctx, globalScale) => {
-  const radius = node.size / 2;
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
-  ctx.fill();
-};
-
-const DeveloperUniverse = (props) => {
-  const { align = "left" } = props;
+const DeveloperUniverse = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [loading, setLoading] = useState(true);
   const [showOrphanNodes, setShowOrphanNodes] = useState(false);
   const [hoveredNode, setHoveredNode] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
-  const graphRef = React.useRef();
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const fullscreenRef = useRef(null);
+  const graphRef = useRef();
 
   useEffect(() => {
     fetch("/processed_data/developer_universe.json")
       .then((response) => response.json())
       .then((data) => {
-        console.log("Developer Universe data loaded:", data);
-        console.log("Nodes:", data.nodes?.length, "Links:", data.links?.length);
         setGraphData(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error loading developer universe data:", error);
         setLoading(false);
       });
   }, []);
 
   const processedGraphData = useMemo(() => {
-    console.log("Processing graph data:", graphData);
-    if (!graphData.nodes.length) {
-      console.log("No nodes found, returning empty data");
-      return { nodes: [], links: [] };
-    }
+    if (!graphData.nodes.length) return { nodes: [], links: [] };
 
     const connectedNodeIds = new Set();
     graphData.links.forEach((link) => {
@@ -117,10 +70,7 @@ const DeveloperUniverse = (props) => {
       const size = sizeScale(node.game_count || 1) * 0.25;
       // Node color based on average review score
       const color = getReviewColor(node.avg_review_score || 0);
-      // Add a property to indicate if node is selected or hovered
-      const isSelected = selectedNode && selectedNode.id === node.id;
-      const isHovered = hoveredNode && hoveredNode.id === node.id;
-      return { ...node, size, color, isSelected, isHovered };
+      return { ...node, size, color };
     });
 
     // If hiding orphans, also filter links to be safe
@@ -147,16 +97,11 @@ const DeveloperUniverse = (props) => {
       }
     });
 
-    console.log("Final processed data:", {
-      nodes: finalNodes.length,
-      links: finalLinks.length,
-    });
     return { nodes: finalNodes, links: finalLinks };
-  }, [graphData, showOrphanNodes, selectedNode, hoveredNode]); // Added selectedNode, hoveredNode to dependencies
+  }, [graphData, showOrphanNodes]);
 
   useEffect(() => {
     if (!loading && graphRef.current && processedGraphData.nodes.length > 0) {
-      // Timeout ensures the graph is rendered before fitting
       setTimeout(() => {
         if (graphRef.current) {
           graphRef.current.d3ReheatSimulation();
@@ -192,77 +137,8 @@ const DeveloperUniverse = (props) => {
     }
   };
 
-  // Fullscreen API logic
-  const handleFullscreen = () => {
-    if (!isFullscreen) {
-      if (fullscreenRef.current.requestFullscreen) {
-        fullscreenRef.current.requestFullscreen();
-      } else if (fullscreenRef.current.webkitRequestFullscreen) {
-        fullscreenRef.current.webkitRequestFullscreen();
-      } else if (fullscreenRef.current.mozRequestFullScreen) {
-        fullscreenRef.current.mozRequestFullScreen();
-      } else if (fullscreenRef.current.msRequestFullscreen) {
-        fullscreenRef.current.msRequestFullscreen();
-      }
-      setIsFullscreen(true);
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      }
-      setIsFullscreen(false);
-    }
-  };
-
-  // Listen for fullscreen change to update state
-  useEffect(() => {
-    const handleChange = () => {
-      const fsElement =
-        document.fullscreenElement ||
-        document.webkitFullscreenElement ||
-        document.mozFullScreenElement ||
-        document.msFullscreenElement;
-      setIsFullscreen(!!fsElement);
-    };
-    document.addEventListener("fullscreenchange", handleChange);
-    document.addEventListener("webkitfullscreenchange", handleChange);
-    document.addEventListener("mozfullscreenchange", handleChange);
-    document.addEventListener("MSFullscreenChange", handleChange);
-    return () => {
-      document.removeEventListener("fullscreenchange", handleChange);
-      document.removeEventListener("webkitfullscreenchange", handleChange);
-      document.removeEventListener("mozfullscreenchange", handleChange);
-      document.removeEventListener("MSFullscreenChange", handleChange);
-    };
-  }, []);
-
   if (loading) {
-    return (
-      <div style={{ color: "#fff", padding: "2rem", textAlign: "center" }}>
-        Loading Developer Universe...
-      </div>
-    );
-  }
-
-  if (!graphData.nodes || graphData.nodes.length === 0) {
-    return (
-      <div style={{ color: "#fff", padding: "2rem", textAlign: "center" }}>
-        No developer data available.
-      </div>
-    );
-  }
-
-  if (!processedGraphData.nodes || processedGraphData.nodes.length === 0) {
-    return (
-      <div style={{ color: "#fff", padding: "2rem", textAlign: "center" }}>
-        No developers found with more than 5 games.
-      </div>
-    );
+    return <div>Loading Developer Universe...</div>;
   }
 
   const formatOwners = (owners) => {
@@ -280,120 +156,55 @@ const DeveloperUniverse = (props) => {
       style={{
         position: "relative",
         width: "100%",
-        height: isFullscreen ? "100vh" : "auto",
-        minHeight: isFullscreen
-          ? "100vh"
-          : 1300 /* Increased overall minHeight */,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between" /* Distribute space vertically */,
+        height: 700,
       }}
     >
-      <div className={`chart-heading-block ${align}`}>
-        <ChartHeading align={align}>Developers & Publishers</ChartHeading>
-        <p
-          style={{
-            color: "#ccc",
-            fontSize: "1.08rem",
-            maxWidth: 700,
-            margin: "0 0 24px 0",
-          }}
-        >
-          This interactive network graph maps the relationships between major
-          game developers and publishers on Steam. Each node is a company, sized
-          by the number of games they've released and colored by their average
-          review score. Lines connect companies that have collaborated. Click a
-          node to explore details and connections, or use the controls to reset
-          or go fullscreen.
-        </p>
-      </div>
-      {/* Interactive area and legend in a column flex container - now main content area */}
+      <ChartHeading>Developers & Publishers</ChartHeading>
+      <p
+        style={{
+          color: "#ccc",
+          fontSize: "1.08rem",
+          maxWidth: 700,
+          margin: "0 0 24px 0",
+        }}
+      >
+        This interactive network graph maps the relationships between major game
+        developers and publishers on Steam. Each node is a company, sized by the
+        number of games they've released and colored by their average review
+        score. Lines connect companies that have collaborated. Click a node to
+        explore details and connections, or use the controls to reset.
+      </p>
+      <div style={{ height: 30 }}></div>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
-          flexGrow: 1 /* Allow to grow and take available space */,
           width: "100%",
-          minHeight: 800 /* Minimum height for graph and panel area */,
         }}
       >
-        {/* Interactive area: hover + graph */}
         <div
-          ref={fullscreenRef}
           style={{
             display: "flex",
-            flexDirection: "row" /* Graph and panel side-by-side */,
+            flexDirection: "row",
             alignItems: "flex-start",
             width: "100%",
-            flexGrow: 1 /* Allow this section to take available height */,
+            height: 550,
             margin: 0,
             padding: 0,
-            position: isFullscreen ? "fixed" : "relative",
-            top: isFullscreen ? 0 : undefined,
-            left: isFullscreen ? 0 : undefined,
-            zIndex: isFullscreen ? 9999 : "auto",
-            background: isFullscreen ? "rgba(10,10,20,0.95)" : "none",
-            transition: "all 0.2s",
+            position: "relative",
+            background: "none",
           }}
           onClick={handleBackgroundClick}
           className="force-graph-container"
         >
-          <ForceGraph2D
-            ref={graphRef}
-            graphData={processedGraphData}
-            nodeLabel="id"
-            onNodeHover={handleNodeHover}
-            onNodeClick={handleNodeClick}
-            nodeVal="size"
-            nodeColor={(node) => {
-              if (
-                selectedNode &&
-                selectedNode.neighbors.some((n) => n.id === node.id)
-              ) {
-                return "#1085F0"; // Blue for neighbors
-              }
-              if (selectedNode && node.id === selectedNode.id) {
-                return "#C021E9"; // Purple for selected node
-              }
-              return node.color;
-            }}
-            linkColor={(link) => {
-              const sourceId =
-                typeof link.source === "object" ? link.source.id : link.source;
-              const targetId =
-                typeof link.target === "object" ? link.target.id : link.target;
-              const isHoveredLink =
-                selectedNode &&
-                (sourceId === selectedNode.id || targetId === selectedNode.id);
-              return isHoveredLink ? "#1085F0" : "rgba(255,255,255,0.2)";
-            }}
-            linkWidth={(link) => {
-              const sourceId =
-                typeof link.source === "object" ? link.source.id : link.source;
-              const targetId =
-                typeof link.target === "object" ? link.target.id : link.target;
-              const isHoveredLink =
-                selectedNode &&
-                (sourceId === selectedNode.id || targetId === selectedNode.id);
-              return isHoveredLink ? 2 : 1;
-            }}
-            backgroundColor="rgba(0,0,0,0)"
-            width={800}
-            height={600}
-            enableNodeDrag={true}
-            enableZoomPan={true}
-            showNavInfo={true}
-          />
           {/* Details container */}
           <div
             style={{
               width: 320,
               minWidth: 320,
               maxWidth: 320,
-              height: "auto" /* Height should be auto based on content */,
-              maxHeight: "100%" /* Constrain max height to parent flex item */,
-              overflowY: "auto" /* Enable scrolling if content overflows */,
+              height: 500,
               background: "rgba(20, 20, 30, 0.7)",
               color: "#fff",
               borderRadius: 16,
@@ -624,195 +435,254 @@ const DeveloperUniverse = (props) => {
                               background: "rgba(33, 150, 243, 0.1)",
                               color: "#fff",
                               fontWeight: 400,
+                              fontSize: 15,
+                              border: "1px solid #2196f3",
+                              whiteSpace: "nowrap",
+                              letterSpacing: 0.1,
                             }}
                           >
-                            <FaLink
-                              style={{
-                                fontSize: 13,
-                                marginRight: 6,
-                                color: "#4CAF50",
-                              }}
-                            />
                             {n.id}
                           </span>
                         ))}
-                        {selectedNode.neighbors.length > 10 && (
-                          <span
-                            style={{
-                              color: "#ccc",
-                              fontSize: 13,
-                              fontWeight: 400,
-                              padding: "2px 10px",
-                            }}
-                          >
-                            and {selectedNode.neighbors.length - 10} more
-                          </span>
-                        )}
                       </div>
+                      {selectedNode.neighbors.length > 10 && (
+                        <div
+                          style={{ color: "#aaa", fontSize: 14, marginTop: 6 }}
+                        >
+                          and {selectedNode.neighbors.length - 10} more
+                        </div>
+                      )}
                     </div>
                   )}
               </div>
             ) : (
-              <div style={{ padding: 18, color: "#ccc", fontSize: 15 }}>
-                Hover or click on a node to see details about the developer or
-                publisher.
+              <div
+                style={{
+                  color: "#aaa",
+                  fontSize: 18,
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  minHeight: 180,
+                  margin: "auto",
+                }}
+              >
+                Hover a node
+                <br />
+                to see details
               </div>
             )}
-            {/* Fullscreen and Reset buttons */}
-            <div
+          </div>
+          {/* Chart container */}
+          <div
+            style={{
+              flex: 1,
+              width: "100%",
+              height: 550,
+              position: "relative",
+              overflow: "hidden",
+              background: "transparent",
+              transition: "height 0.2s",
+            }}
+          >
+            {/* Reset button (top right) */}
+            <button
+              onClick={handleResetLayout}
+              title="Reset"
               style={{
-                marginTop: "auto", // Push buttons to the bottom
-                width: "100%",
+                position: "absolute",
+                top: 18,
+                right: 18,
+                zIndex: 10,
+                background: "rgba(30,30,40,0.85)",
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                padding: "7px 13px",
+                fontSize: 16,
+                fontWeight: 600,
+                boxShadow: "0 2px 8px #0004",
+                cursor: "pointer",
                 display: "flex",
-                justifyContent: "space-around",
-                paddingTop: 18,
-                borderTop: "1px solid rgba(255,255,255,0.1)",
+                alignItems: "center",
+                gap: 7,
+                transition: "background 0.2s",
               }}
             >
-              <button
-                onClick={handleResetLayout}
-                title="Reset Layout"
-                style={{
-                  background: "rgba(30,30,40,0.85)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "10px 15px",
-                  fontSize: 15,
-                  fontWeight: 600,
-                  boxShadow: "0 2px 8px #0004",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  transition: "background 0.2s",
-                }}
-              >
-                <FaRedo style={{ fontSize: 16 }} /> Reset
-              </button>
-              <button
-                onClick={handleFullscreen}
-                title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-                style={{
-                  background: "rgba(30,30,40,0.85)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "10px 15px",
-                  fontSize: 15,
-                  fontWeight: 600,
-                  boxShadow: "0 2px 8px #0004",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  transition: "background 0.2s",
-                }}
-              >
-                {isFullscreen ? (
-                  <>
-                    <FaCompress style={{ fontSize: 16 }} /> Exit Fullscreen
-                  </>
-                ) : (
-                  <>
-                    <FaExpand style={{ fontSize: 16 }} /> Fullscreen
-                  </>
-                )}
-              </button>
-            </div>
+              <FaRedo style={{ fontSize: 15, marginRight: 4 }} /> Reset
+            </button>
+
+            <ForceGraph2D
+              ref={graphRef}
+              graphData={processedGraphData}
+              nodeLabel={(node) => node.id}
+              nodeVal="size"
+              nodeColor={(node) => {
+                if (
+                  selectedNode &&
+                  selectedNode.neighbors.some((n) => n.id === node.id)
+                ) {
+                  return "#1085F0"; // Blue for neighbors
+                }
+                if (selectedNode && node.id === selectedNode.id) {
+                  return "#C021E9"; // Purple for selected node
+                }
+                return node.color;
+              }}
+              linkColor={(link) => {
+                const sourceId =
+                  typeof link.source === "object"
+                    ? link.source.id
+                    : link.source;
+                const targetId =
+                  typeof link.target === "object"
+                    ? link.target.id
+                    : link.target;
+                const isHoveredLink =
+                  selectedNode &&
+                  (sourceId === selectedNode.id ||
+                    targetId === selectedNode.id);
+                return isHoveredLink
+                  ? "#1085F0" // Blue for selected links
+                  : "rgba(255,255,255,0.2)";
+              }}
+              linkWidth={(link) => {
+                const sourceId =
+                  typeof link.source === "object"
+                    ? link.source.id
+                    : link.source;
+                const targetId =
+                  typeof link.target === "object"
+                    ? link.target.id
+                    : link.target;
+                const isHoveredLink =
+                  selectedNode &&
+                  (sourceId === selectedNode.id ||
+                    targetId === selectedNode.id);
+                return isHoveredLink ? 2 : 1;
+              }}
+              onNodeHover={handleNodeHover}
+              onNodeClick={handleNodeClick}
+              backgroundColor="transparent"
+              height={550}
+              d3Force="charge"
+              d3ForceStrength={-8000}
+              d3VelocityDecay={0.3}
+              d3AlphaDecay={0.01}
+              d3ForceInit={(forceGraph) => {
+                // Add collision force based on node size, with more padding
+                forceGraph.d3Force(
+                  "collide",
+                  d3.forceCollide().radius((node) => node.size / 2 + 800)
+                );
+              }}
+            />
           </div>
         </div>
         {/* Color legend for review score (now always below the interactive area) */}
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             marginTop: 50,
             marginBottom: 16,
-            width: 600,
-            maxWidth: "100%",
+            width: "100%",
           }}
         >
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
-              minWidth: 120,
+              justifyContent: "center",
+              width: 600,
+              maxWidth: "100%",
             }}
           >
-            <span
+            <div
               style={{
-                color: "#fff",
-                fontSize: 15,
-                fontWeight: 700,
-                textAlign: "center",
-                letterSpacing: 0.2,
-                marginBottom: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minWidth: 120,
               }}
             >
-              Lower Avg. Review
-              <br />
-              Score
-            </span>
-            <span
+              <span
+                style={{
+                  color: "#fff",
+                  fontSize: 15,
+                  fontWeight: 700,
+                  textAlign: "center",
+                  letterSpacing: 0.2,
+                  marginBottom: 2,
+                }}
+              >
+                Lower Avg. Review
+                <br />
+                Score
+              </span>
+              <span
+                style={{
+                  color: "#fff",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  marginTop: 2,
+                }}
+              >
+                30%
+              </span>
+            </div>
+            <div
               style={{
-                color: "#fff",
-                fontSize: 13,
-                fontWeight: 700,
-                marginTop: 2,
+                background:
+                  "linear-gradient(to right, #d7191c, #fdae61, #ffffbf, #a6d96a, #1a9641)",
+                width: 260,
+                height: 22,
+                borderRadius: 12,
+                margin: "0 32px",
+                border: "2px solid #222",
+                boxShadow: "0 2px 12px 0 #0006",
+                display: "flex",
+                alignItems: "center",
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minWidth: 120,
               }}
             >
-              30%
-            </span>
-          </div>
-          <div
-            style={{
-              background:
-                "linear-gradient(to right, #d7191c, #fdae61, #ffffbf, #a6d96a, #1a9641)",
-              width: 260,
-              height: 22,
-              borderRadius: 12,
-              margin: "0 32px",
-              border: "2px solid #222",
-              boxShadow: "0 2px 12px 0 #0006",
-              display: "flex",
-              alignItems: "center",
-            }}
-          />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              minWidth: 120,
-            }}
-          >
-            <span
-              style={{
-                color: "#fff",
-                fontSize: 15,
-                fontWeight: 700,
-                textAlign: "center",
-                letterSpacing: 0.2,
-                marginBottom: 2,
-              }}
-            >
-              Higher Avg. Review
-              <br />
-              Score
-            </span>
-            <span
-              style={{
-                color: "#fff",
-                fontSize: 13,
-                fontWeight: 700,
-                marginTop: 2,
-              }}
-            >
-              95%
-            </span>
+              <span
+                style={{
+                  color: "#fff",
+                  fontSize: 15,
+                  fontWeight: 700,
+                  textAlign: "center",
+                  letterSpacing: 0.2,
+                  marginBottom: 2,
+                }}
+              >
+                Higher Avg. Review
+                <br />
+                Score
+              </span>
+              <span
+                style={{
+                  color: "#fff",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  marginTop: 2,
+                }}
+              >
+                95%
+              </span>
+            </div>
           </div>
         </div>
       </div>
