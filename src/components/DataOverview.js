@@ -9,6 +9,7 @@ import {
   Legend,
   Tooltip,
 } from "recharts";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const formatNumber = (num) => {
   if (num === null || num === undefined || num === "N/A") return "N/A";
@@ -204,7 +205,10 @@ const DataOverview = ({ info }) => {
           transition: "background 0.15s",
         }}
       >
-        {isTableCollapsed ? "Show Statistics Table" : "Hide Statistics Table"}
+        <span style={{ marginRight: 8 }}>
+          {isTableCollapsed ? "Show Statistics Table" : "Hide Statistics Table"}
+        </span>
+        {isTableCollapsed ? <FaChevronDown /> : <FaChevronUp />}
       </button>
       {!isTableCollapsed && (
         <table

@@ -93,25 +93,32 @@ const ReviewPriceChart = ({ data, align = "left" }) => {
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" stroke={colors.font2} opacity={0.2} />
           <XAxis
             dataKey="price"
-            label={{ value: "Price Range", position: "bottom"}}
-            style={{margin: 50}}
+            stroke={colors.font1}
+            tick={{ fill: colors.font1, fontSize: 14 }}
+            label={{ value: "Price Range", position: "bottom", fill: colors.font1, style: { textAnchor: "middle" } }}
           />
           <YAxis
             yAxisId="left"
             orientation="left"
+            stroke="#8884d8"
+            tick={{ fill: "#8884d8", fontSize: 14 }}
             label={{
               value: "Median Positive Reviews (%)",
               angle: -90,
               position: "left",
+              fill: "#8884d8",
+              style: { textAnchor: "middle" }
             }}
           />
           <YAxis
             yAxisId="right"
             orientation="right"
-            label={{ value: "Number of Games", angle: 90, position: "right" }}
+            stroke="#82ca9d"
+            tick={{ fill: "#82ca9d", fontSize: 14 }}
+            label={{ value: "Number of Games", angle: 90, position: "right", fill: "#82ca9d", style: { textAnchor: "middle" } }}
           />
           <Tooltip
             formatter={(value, name) => {
@@ -120,8 +127,22 @@ const ReviewPriceChart = ({ data, align = "left" }) => {
               }
               return [value.toLocaleString(), "Number of Games"];
             }}
+            contentStyle={{
+              backgroundColor: hexToRgba(colors.background1, 0.9),
+              border: "none",
+              borderRadius: "4px",
+              color: colors.font2,
+              backdropFilter: "blur(5px)",
+              WebkitBackdropFilter: "blur(5px)",
+            }}
+            labelStyle={{
+              color: colors.font2,
+              fontWeight: "bold",
+              margin: "5px",
+            }}
+            itemStyle={{ color: colors.font2 }}
+            labelFormatter={(label) => `Price Range: ${label}`}
           />
-          <Legend />
           <Line
             yAxisId="left"
             type="monotone"

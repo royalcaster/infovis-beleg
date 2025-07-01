@@ -77,6 +77,7 @@ const ReviewPercentageOverTimeChart = ({ data, align = "left" }) => {
             fontSize: "1.08rem",
             maxWidth: 700,
             margin: "0 0 24px 0",
+            textAlign: "left"
           }}
         >
           This chart shows how the average percentage of positive reviews for
