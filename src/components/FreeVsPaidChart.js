@@ -22,14 +22,13 @@ const renderCustomLabel = ({
   name,
 }) => {
   const RADIAN = Math.PI / 180;
-  // Position label 2px outside the outer radius (very close)
-  const radius = outerRadius + 2;
+  // Position label 30px outside the outer radius for more space
+  const radius = outerRadius + 30;
   let x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
   const isRight = x > cx;
   // Nudge x for better fit
-  x = isRight ? x + 10 : x - 10;
-  // Always split into two lines: name, then percent
+  x = isRight ? x + 18 : x - 18;
   const percentText = `${(percent * 100).toFixed(0)}%`;
   return (
     <text
@@ -38,12 +37,12 @@ const renderCustomLabel = ({
       fill="#b8f7d4"
       textAnchor={isRight ? "start" : "end"}
       dominantBaseline="central"
-      fontSize={13}
-      fontWeight={600}
+      fontSize={15}
+      fontWeight={700}
       style={{ textShadow: "0 2px 8px #000a" }}
     >
       {name}
-      <tspan x={x} dy={16}>
+      <tspan x={x} dy={18}>
         {percentText}
       </tspan>
     </text>
@@ -69,7 +68,7 @@ const FreeVsPaidChart = ({ data, align = "left" }) => {
   }
 
   return (
-    <div style={{ minWidth: 600 }}>
+    <div style={{ minWidth: 520, width: '100%' }}>
       <div className={`chart-heading-block ${align}`}>
         <ChartHeading align={align}>Free vs Paid Games</ChartHeading>
         <p
@@ -86,45 +85,46 @@ const FreeVsPaidChart = ({ data, align = "left" }) => {
           compared to paid ones.
         </p>
       </div>
-      <ResponsiveContainer width="99%" height={400}>
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="count"
-            nameKey="type"
-            cx="50%"
-            cy="50%"
-            outerRadius={150}
-            fill="#8884d8"
-            label={renderCustomLabel}
-            labelLine={false}
-            // Remove any stroke/border
-            stroke="none"
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-                stroke="none"
-              />
-            ))}
-          </Pie>
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "rgba(0, 0, 0, 0.8)",
-              border: "none",
-              borderRadius: "4px",
-              color: "#fff",
-            }}
-            formatter={(value) => [value, "Games"]}
-          />
-          <Legend
-            wrapperStyle={{
-              color: "#fff",
-            }}
-          />
-        </PieChart>
-      </ResponsiveContainer>
+      <div style={{ padding: '0 60px' }}>
+        <ResponsiveContainer width="100%" minWidth={400} height={400}>
+          <PieChart>
+            <Pie
+              data={data}
+              dataKey="count"
+              nameKey="type"
+              cx="50%"
+              cy="50%"
+              outerRadius={150}
+              fill="#8884d8"
+              label={renderCustomLabel}
+              labelLine={false}
+              stroke="none"
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                  stroke="none"
+                />
+              ))}
+            </Pie>
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                border: "none",
+                borderRadius: "4px",
+                color: "#fff",
+              }}
+              formatter={(value) => [value, "Games"]}
+            />
+            <Legend
+              wrapperStyle={{
+                color: "#fff",
+              }}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };

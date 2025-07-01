@@ -156,7 +156,6 @@ const DeveloperUniverse = () => {
       style={{
         position: "relative",
         width: "100%",
-        height: 700,
       }}
     >
       <ChartHeading>Developers & Publishers</ChartHeading>
@@ -584,6 +583,7 @@ const DeveloperUniverse = () => {
         </div>
         {/* Color legend for review score (now always below the interactive area) */}
         <div
+          className="developer-universe-legend"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -601,6 +601,7 @@ const DeveloperUniverse = () => {
               justifyContent: "center",
               width: 600,
               maxWidth: "100%",
+              marginBottom: 120,
             }}
           >
             <div

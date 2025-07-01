@@ -143,7 +143,7 @@ const DataOverview = ({ info }) => {
             flex: 1,
           }}
         >
-          <ResponsiveContainer width={340} height={220}>
+          <ResponsiveContainer width={500} height={220}>
             <PieChart>
               <Pie
                 data={pieData}
@@ -156,6 +156,7 @@ const DataOverview = ({ info }) => {
                 label={({ name, value }) => `${name}: ${formatNumber(value)}`}
                 labelLine={false}
                 isAnimationActive={false}
+                stroke="none"
               >
                 {pieData.map((entry, idx) => (
                   <Cell key={`cell-${idx}`} fill={entry.color} />

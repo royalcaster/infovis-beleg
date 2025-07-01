@@ -181,6 +181,7 @@ const GameOwnerCarousel = (props) => {
 
   return (
     <div>
+      <div style={{ height: 180 }}></div>
       <div className={`chart-heading-block ${align}`}>
         <ChartHeading align={align}>Player counts</ChartHeading>
         <p

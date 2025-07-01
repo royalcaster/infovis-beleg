@@ -30,7 +30,7 @@ const PositiveReviewsChart = ({ data }) => {
   }
 
   return (
-    <section className="chart-section">
+    <section className="chart-section chart-section--spaced" style={{display: "block", width: "100%"}}>
       <h1 className="chart-title">Positive reviews over time</h1>
       <p
         style={{

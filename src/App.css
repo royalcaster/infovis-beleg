@@ -336,18 +336,10 @@ body {
 }
 
 .chart-section-wrapper {
-  margin-bottom: 8rem;
+  margin-bottom: 10rem;
   text-align: left;
   padding-left: 0;
   margin-left: 0;
-}
-
-.chart-section-wrapper:first-child {
-  margin-top: 5rem;
-}
-
-.chart-section-wrapper:last-child {
-  margin-bottom: 0;
 }
 
 h2,
@@ -368,6 +360,7 @@ h2,
 .chart-heading-block {
   max-width: 700px;
   margin-bottom: 24px;
+  margin-top: 0;
 }
 .chart-heading-block.left {
   text-align: left;
@@ -394,4 +387,25 @@ h2,
     padding-right: 0;
     max-width: 100%;
   }
+}
+
+.chart-heading-block h2,
+.chart-section h2,
+.chart-title {
+  margin-bottom: 1.2rem;
+  margin-top: 0;
+}
+
+.chart-heading-block p,
+.chart-section p {
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.chart-section--spaced {
+  margin-top: 100px !important;
+}
+
+.developer-universe-legend + .chart-section--spaced {
+  margin-top: 120px !important;
 }
