@@ -186,6 +186,11 @@ const App = () => {
       props: { data: data.carouselData },
       key: "carousel",
     },
+    {
+      component: ReviewPriceChart,
+      props: { data: data.h7Data },
+      key: "reviewPrice",
+    },
     { component: DeveloperUniverse, props: {}, key: "devUniverse" },
     {
       component: ReviewPercentageOverTimeChart,
@@ -196,12 +201,7 @@ const App = () => {
       component: GenrePriceDominanceChart,
       props: { data: data.h4Data },
       key: "genrePrice",
-    },
-    {
-      component: ReviewPriceChart,
-      props: { data: data.h7Data },
-      key: "reviewPrice",
-    },
+    }
     // Add more chart components here as needed
   ];
 

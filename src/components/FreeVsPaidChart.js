@@ -22,13 +22,13 @@ const renderCustomLabel = ({
   name,
 }) => {
   const RADIAN = Math.PI / 180;
-  // Position label 30px outside the outer radius for more space
-  const radius = outerRadius + 30;
+  // Position label significantly further outside the outer radius for more space
+  const radius = outerRadius + 50;
   let x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
   const isRight = x > cx;
-  // Nudge x for better fit
-  x = isRight ? x + 18 : x - 18;
+  // Nudge x even further out for better fit
+  x = isRight ? x + 30 : x - 30;
   const percentText = `${(percent * 100).toFixed(0)}%`;
   return (
     <text
@@ -86,7 +86,9 @@ const FreeVsPaidChart = ({ data, align = "left" }) => {
         </p>
       </div>
       <div style={{ padding: '0 60px' }}>
-        <ResponsiveContainer width="100%" minWidth={400} height={400}>
+        <ResponsiveContainer width="100%" minWidth={400} height={400}
+          style={{ border: '2px dashed red' }}
+        >
           <PieChart>
             <Pie
               data={data}
@@ -99,6 +101,7 @@ const FreeVsPaidChart = ({ data, align = "left" }) => {
               label={renderCustomLabel}
               labelLine={false}
               stroke="none"
+              tooltipType="none"
             >
               {data.map((entry, index) => (
                 <Cell
@@ -108,15 +111,6 @@ const FreeVsPaidChart = ({ data, align = "left" }) => {
                 />
               ))}
             </Pie>
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "rgba(0, 0, 0, 0.8)",
-                border: "none",
-                borderRadius: "4px",
-                color: "#fff",
-              }}
-              formatter={(value) => [value, "Games"]}
-            />
             <Legend
               wrapperStyle={{
                 color: "#fff",

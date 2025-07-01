@@ -42,6 +42,7 @@ const DataOverview = ({ info }) => {
   const [sortColumn, setSortColumn] = useState("Metric");
   const [sortDirection, setSortDirection] = useState("asc");
   const [hoveredCol, setHoveredCol] = useState(null);
+  const [isTableCollapsed, setIsTableCollapsed] = useState(false);
 
   if (!info) return null;
   const { total_games_analyzed, numeric_column_stats, free_vs_paid_counts } =
@@ -126,7 +127,7 @@ const DataOverview = ({ info }) => {
             }}
           >
             This section summarizes the main statistics of the Steam games
-            dataset used in this app. It provides an overview of the data's
+            dataset used in this project. It provides an overview of the data's
             size, key metrics, and distributions, helping you understand the
             scope and characteristics of the analyzed games.
           </p>
@@ -188,7 +189,24 @@ const DataOverview = ({ info }) => {
         </div>
       </div>
       <div style={{ height: 50 }}></div>
-      <div>
+      <button
+        onClick={() => setIsTableCollapsed(!isTableCollapsed)}
+        style={{
+          background: colors.background3,
+          color: colors.font1,
+          border: "none",
+          padding: "10px 20px",
+          borderRadius: 5,
+          cursor: "pointer",
+          marginBottom: 20,
+          fontSize: 16,
+          fontWeight: 700,
+          transition: "background 0.15s",
+        }}
+      >
+        {isTableCollapsed ? "Show Statistics Table" : "Hide Statistics Table"}
+      </button>
+      {!isTableCollapsed && (
         <table
           style={{
             width: "100%",
@@ -248,16 +266,15 @@ const DataOverview = ({ info }) => {
                       left: "50%",
                       top: 38,
                       transform: "translateX(-50%)",
-                      background: "#23263a",
-                      color: "#fff",
-                      fontSize: 13,
-                      padding: "7px 13px",
-                      borderRadius: 8,
-                      boxShadow: "0 2px 12px #0007",
-                      zIndex: 10,
+                      background: colors.background2,
+                      color: colors.font1,
+                      padding: "8px 12px",
+                      borderRadius: 4,
                       whiteSpace: "nowrap",
-                      pointerEvents: "none",
-                      fontFamily: "Roboto, Arial, Helvetica, sans-serif",
+                      zIndex: 10,
+                      fontSize: 13,
+                      fontWeight: 400,
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
                     }}
                   >
                     {metricTooltips[col]}
@@ -267,83 +284,39 @@ const DataOverview = ({ info }) => {
             </tr>
           </thead>
           <tbody>
-            {sortedStats.map((stat, idx) => (
+            {sortedStats.map((stat) => (
               <tr
                 key={stat.column_name}
                 style={{
-                  background:
-                    idx % 2 === 0
-                      ? "rgba(255,255,255,0)"
-                      : "rgba(255,255,255,0.05)",
-                  height: 55,
+                  borderBottom: `1px solid ${colors.background3}`,
+                  color: colors.font2,
+                  transition: "background 0.1s",
+                  height: 50,
                 }}
               >
-                <td
-                  style={{
-                    padding: "10px 16px",
-                    color: colors.font2,
-                    fontWeight: 400,
-                    textAlign: "left",
-                    fontFamily: "Roboto, Arial, Helvetica, sans-serif",
-                  }}
-                >
+                <td style={{ padding: "10px 16px", textAlign: "left" }}>
                   {stat.column_name}
                 </td>
-                <td
-                  style={{
-                    padding: "10px 16px",
-                    color: colors.font2,
-                    textAlign: "right",
-                    fontFamily: "Roboto, Arial, Helvetica, sans-serif",
-                  }}
-                >
+                <td style={{ padding: "10px 16px", textAlign: "right" }}>
                   {formatNumber(stat.min)}
                 </td>
-                <td
-                  style={{
-                    padding: "10px 16px",
-                    color: colors.font2,
-                    textAlign: "right",
-                    fontFamily: "Roboto, Arial, Helvetica, sans-serif",
-                  }}
-                >
+                <td style={{ padding: "10px 16px", textAlign: "right" }}>
                   {formatNumber(stat.max)}
                 </td>
-                <td
-                  style={{
-                    padding: "10px 16px",
-                    color: colors.font2,
-                    textAlign: "right",
-                    fontFamily: "Roboto, Arial, Helvetica, sans-serif",
-                  }}
-                >
+                <td style={{ padding: "10px 16px", textAlign: "right" }}>
                   {formatNumber(stat.average)}
                 </td>
-                <td
-                  style={{
-                    padding: "10px 16px",
-                    color: colors.font2,
-                    textAlign: "right",
-                    fontFamily: "Roboto, Arial, Helvetica, sans-serif",
-                  }}
-                >
+                <td style={{ padding: "10px 16px", textAlign: "right" }}>
                   {formatNumber(stat.median)}
                 </td>
-                <td
-                  style={{
-                    padding: "10px 16px",
-                    color: colors.font2,
-                    textAlign: "right",
-                    fontFamily: "Roboto, Arial, Helvetica, sans-serif",
-                  }}
-                >
+                <td style={{ padding: "10px 16px", textAlign: "right" }}>
                   {formatNumber(stat.std_dev)}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+      )}
     </section>
   );
 };

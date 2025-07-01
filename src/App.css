@@ -358,14 +358,10 @@ h2,
 }
 
 .chart-heading-block {
-  max-width: 700px;
-  margin-bottom: 24px;
-  margin-top: 0;
+  margin-bottom: 30px;
 }
 .chart-heading-block.left {
   text-align: left;
-  margin-left: 0;
-  margin-right: auto;
 }
 .chart-heading-block.right {
   text-align: right;

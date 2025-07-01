@@ -73,6 +73,7 @@ const ReviewPriceChart = ({ data, align = "left" }) => {
             fontSize: "1.08rem",
             maxWidth: 700,
             margin: "0 0 24px 0",
+            textAlign: "left"
           }}
         >
           This chart examines how a game's price relates to its review scores.
@@ -95,7 +96,8 @@ const ReviewPriceChart = ({ data, align = "left" }) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="price"
-            label={{ value: "Price Range", position: "bottom" }}
+            label={{ value: "Price Range", position: "bottom"}}
+            style={{margin: 50}}
           />
           <YAxis
             yAxisId="left"
